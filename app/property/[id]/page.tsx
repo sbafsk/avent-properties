@@ -7,50 +7,33 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Share, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { createClient } from '@/lib/supabase/server'
+import { notFound } from 'next/navigation'
 
-// Mock property data - in a real app this would come from an API
-const mockProperty = {
-  id: "1",
-  title: "Oceanfront Villa Punta del Este",
-  location: "Punta del Este, Uruguay",
-  price: 2500000,
-  currency: "USD",
-  bedrooms: 5,
-  bathrooms: 4,
-  area: 450,
-  parking: 3,
-  yearBuilt: 2021,
-  lotSize: 800,
-  type: "Villa",
-  featured: true,
-  description:
-    "This exceptional oceanfront villa represents the pinnacle of luxury living in Punta del Este. Designed by renowned architects, this contemporary masterpiece offers unparalleled ocean views, premium finishes, and world-class amenities. The property features an open-concept design that seamlessly blends indoor and outdoor living, perfect for entertaining and relaxation. Located in one of Uruguay's most prestigious neighborhoods, this villa offers both privacy and proximity to the finest restaurants, golf courses, and cultural attractions.",
-  images: [
-    "/luxury-oceanfront-villa-exterior-punta-del-este.png",
-    "/luxury-villa-living-room-ocean-view.png",
-    "/modern-kitchen-luxury-villa-uruguay.png",
-    "/master-bedroom-ocean-view-luxury-villa.png",
-    "/infinity-pool-oceanfront-villa-uruguay.png",
-    "/luxury-villa-terrace-ocean-view-sunset.png",
-  ],
-  amenities: ["Ocean View", "Private Pool", "Beach Access", "Gym", "Spa", "Concierge", "Security", "WiFi"],
-  features: [
-    "Smart Home Technology",
-    "Wine Cellar",
-    "Home Theater",
-    "Chef's Kitchen",
-    "Master Suite",
-    "Guest Quarters",
-    "Infinity Pool",
-    "Private Beach",
-    "Landscaped Gardens",
-    "Outdoor Kitchen",
-  ],
+// Fetch property from Supabase
+async function getProperty(id: string) {
+  const supabase = await createClient()
+  
+  const { data: property, error } = await supabase
+    .from('properties')
+    .select('*')
+    .eq('id', id)
+    .single()
+  
+  if (error || !property) {
+    return null
+  }
+  
+  return property
 }
 
 export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  console.log('Property ID:', id)
+  const property = await getProperty(id)
+  
+  if (!property) {
+    notFound()
+  }
   return (
     <MainLayout>
       <div className="pt-24 px-4">
@@ -73,15 +56,14 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      {mockProperty.featured && <Badge className="bg-gold text-gold-foreground">Featured</Badge>}
                       <Badge variant="outline" className="glass border-gold text-gold">
-                        {mockProperty.type}
+                        {property.property_type}
                       </Badge>
                     </div>
-                    <h1 className="heading-luxury text-3xl md:text-4xl text-foreground">{mockProperty.title}</h1>
+                    <h1 className="heading-luxury text-3xl md:text-4xl text-foreground">{property.title}</h1>
                     <div className="flex items-center text-muted-foreground">
                       <MapPin className="h-5 w-5 mr-2" />
-                      <span className="text-luxury text-lg">{mockProperty.location}</span>
+                      <span className="text-luxury text-lg">{property.city}, {property.neighborhood}</span>
                     </div>
                   </div>
 
@@ -92,24 +74,24 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
               </div>
 
               {/* Image Gallery */}
-              <PropertyGallery images={mockProperty.images} title={mockProperty.title} />
+              <PropertyGallery images={property.images || []} title={property.title} />
 
               {/* Description */}
               <GlassCard className="p-6">
                 <h2 className="heading-luxury text-2xl text-foreground mb-4">About This Property</h2>
-                <p className="text-luxury text-muted-foreground leading-relaxed">{mockProperty.description}</p>
+                <p className="text-luxury text-muted-foreground leading-relaxed">{property.description}</p>
               </GlassCard>
 
               {/* Property Specs */}
               <PropertySpecs
-                bedrooms={mockProperty.bedrooms}
-                bathrooms={mockProperty.bathrooms}
-                area={mockProperty.area}
-                parking={mockProperty.parking}
-                yearBuilt={mockProperty.yearBuilt}
-                lotSize={mockProperty.lotSize}
-                amenities={mockProperty.amenities}
-                features={mockProperty.features}
+                bedrooms={property.bedrooms}
+                bathrooms={property.bathrooms}
+                area={property.area_m2}
+                parking={3}
+                yearBuilt={2021}
+                lotSize={800}
+                amenities={property.amenities || []}
+                features={property.amenities || []}
               />
 
               {/* Location */}
@@ -131,7 +113,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <PropertyCTA price={mockProperty.price} currency={mockProperty.currency} propertyId={mockProperty.id} />
+              <PropertyCTA price={property.price} currency={property.currency} propertyId={property.id} />
             </div>
           </div>
         </div>

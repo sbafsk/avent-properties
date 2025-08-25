@@ -31,3 +31,28 @@ export interface Property {
     createdAt: string
     updatedAt: string
 }
+
+export interface Reservation {
+    id: string
+    propertyId: string
+    userId: string
+    date: string
+    time: string
+    status: "pending" | "confirmed" | "cancelled" | "completed"
+    notes?: string
+    createdAt: string
+    updatedAt: string
+}
+
+export interface Transaction {
+    id: string
+    userId: string
+    propertyId?: string
+    type: "purchase" | "commission" | "refund" | "tour_booking"
+    amount: number
+    currency: string
+    status: "pending" | "completed" | "failed" | "cancelled"
+    description: string
+    createdAt: string
+    updatedAt: string
+}

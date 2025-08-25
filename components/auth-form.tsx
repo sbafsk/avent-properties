@@ -83,12 +83,18 @@ export function AuthForm({ mode, onSubmit }: AuthFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("Form submitted with data:", formData)
 
-    if (!validateForm()) return
+    if (!validateForm()) {
+      console.log("Form validation failed")
+      return
+    }
 
+    console.log("Form validation passed, calling onSubmit")
     setLoading(true)
     try {
       await onSubmit(formData)
+      console.log("onSubmit completed successfully")
     } catch (error) {
       console.error("Auth error:", error)
     } finally {

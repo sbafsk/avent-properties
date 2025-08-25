@@ -67,9 +67,10 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
     { number: 5, title: "Confirmation", icon: CheckCircle },
   ]
 
-  const mockProperties = [
+  // In a real app, this would fetch properties from the API
+  const availableProperties = [
     "Oceanfront Villa Punta del Este",
-    "Modern Penthouse La Barra",
+    "Modern Penthouse La Barra", 
     "Beachfront Estate José Ignacio",
     "Contemporary Apartment Piriápolis",
     "Luxury Beach House Manantiales",
@@ -132,7 +133,7 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
                   <SelectValue placeholder="Select a property" />
                 </SelectTrigger>
                 <SelectContent className="glass border-white/20">
-                  {mockProperties.map((property) => (
+                  {availableProperties.map((property) => (
                     <SelectItem key={property} value={property}>
                       {property}
                     </SelectItem>
