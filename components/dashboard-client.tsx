@@ -11,11 +11,39 @@ import { Badge } from "@/components/ui/badge"
 import { User, Calendar, Building, BarChart3, Settings, Crown } from "lucide-react"
 import { UserProfile, Property } from "@/lib/types"
 
+// Local type definitions to match component expectations
+interface DashboardReservation {
+  id: string
+  confirmationNumber: string
+  propertyTitle: string
+  propertyLocation: string
+  tourDate: string
+  tourTime: string
+  guests: number
+  tourPackage: "basic" | "premium" | "luxury"
+  status: "confirmed" | "pending" | "completed" | "cancelled"
+  totalPaid: number
+}
+
+interface DashboardTransaction {
+  id: string
+  type: "tour_booking" | "property_purchase" | "commission" | "refund"
+  amount: number
+  currency: string
+  status: "completed" | "pending" | "failed" | "refunded"
+  clientName: string
+  clientEmail: string
+  propertyTitle: string
+  agentName: string
+  date: string
+  description: string
+}
+
 interface DashboardClientProps {
   userProfile: UserProfile
-  reservations: unknown[]
+  reservations: DashboardReservation[]
   properties: Property[]
-  transactions: unknown[]
+  transactions: DashboardTransaction[]
   errors: {
     reservations: unknown
     properties: unknown
@@ -89,7 +117,7 @@ export function DashboardClient({ userProfile, reservations, properties, transac
                   <div>
                     <p className="text-luxury text-sm text-muted-foreground">Active Reservations</p>
                     <p className="text-luxury text-2xl font-bold text-foreground">
-                      {reservations.filter((r: any) => r.status === "confirmed").length}
+                      {reservations.filter((r: DashboardReservation) => r.status === "confirmed").length}
                     </p>
                   </div>
                 </div>
@@ -125,7 +153,7 @@ export function DashboardClient({ userProfile, reservations, properties, transac
             {/* Recent Activity */}
             <div>
               <h2 className="heading-luxury text-2xl text-foreground mb-6">Recent Reservations</h2>
-              <ReservationList reservations={reservations.slice(0, 2) as any} />
+              <ReservationList reservations={reservations.slice(0, 2)} />
             </div>
           </div>
         )
@@ -140,7 +168,7 @@ export function DashboardClient({ userProfile, reservations, properties, transac
               </div>
               <Button className="bg-gold text-gold-foreground hover:bg-gold/90">Book New Tour</Button>
             </div>
-            <ReservationList reservations={reservations as any} />
+            <ReservationList reservations={reservations} />
           </div>
         )
 
@@ -174,7 +202,7 @@ export function DashboardClient({ userProfile, reservations, properties, transac
               <h1 className="heading-luxury text-3xl text-foreground mb-2">Transaction Overview</h1>
               <p className="text-luxury text-muted-foreground">Monitor all financial transactions and revenue</p>
             </div>
-            <AdminTransactionTable transactions={transactions as any} />
+            <AdminTransactionTable transactions={transactions} />
           </div>
         )
 

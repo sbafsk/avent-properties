@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PropertyFilterSidebar } from '@/components/property-filter-sidebar'
 import { MapPin, Filter } from 'lucide-react'
+import Image from 'next/image'
 
 interface Property {
   id: string
@@ -133,9 +134,11 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
               {/* Property Image */}
               <div className="aspect-video bg-gradient-to-br from-gold/20 to-gold/5 relative overflow-hidden">
                 {property.images && property.images.length > 0 ? (
-                  <img 
+                  <Image 
                     src={property.images[0]} 
                     alt={property.title}
+                    width={400}
+                    height={300}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 ) : (
