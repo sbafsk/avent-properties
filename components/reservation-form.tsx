@@ -40,7 +40,7 @@ interface FormData {
   billingAddress: string
 }
 
-export function ReservationForm({ propertyId, propertyTitle }: ReservationFormProps) {
+export function ReservationForm({ propertyTitle }: ReservationFormProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
     selectedProperty: propertyTitle || "",
@@ -75,7 +75,7 @@ export function ReservationForm({ propertyId, propertyTitle }: ReservationFormPr
     "Luxury Beach House Manantiales",
   ]
 
-  const updateFormData = (field: keyof FormData, value: any) => {
+  const updateFormData = (field: keyof FormData, value: string | number | Date | undefined) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -123,7 +123,7 @@ export function ReservationForm({ propertyId, propertyTitle }: ReservationFormPr
           <GlassCard className="p-6">
             <h2 className="heading-luxury text-2xl text-foreground mb-6">Select Property</h2>
             <div className="space-y-4">
-              <Label className="text-foreground">Choose the property you'd like to tour</Label>
+              <Label className="text-foreground">Choose the property you&apos;d like to tour</Label>
               <Select
                 value={formData.selectedProperty}
                 onValueChange={(value) => updateFormData("selectedProperty", value)}

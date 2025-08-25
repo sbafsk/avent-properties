@@ -24,7 +24,7 @@ export function PropertySpecs({
   features,
 }: PropertySpecsProps) {
   const getAmenityIcon = (amenity: string) => {
-    const iconMap: { [key: string]: any } = {
+    const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
       "Ocean View": Waves,
       "Private Pool": Waves,
       "Beach Access": Waves,

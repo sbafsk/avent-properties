@@ -17,7 +17,7 @@ async function getAuthenticatedUser(token: string) {
 			})
 		}
 		return user
-	} catch (error) {
+	} catch {
 		throw new GraphQLError('Authentication failed', {
 			extensions: { code: 'UNAUTHENTICATED' },
 		})

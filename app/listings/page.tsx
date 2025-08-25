@@ -97,9 +97,17 @@ export default function ListingsPage() {
   const [sortBy, setSortBy] = useState("price-desc")
   const [filteredProperties, setFilteredProperties] = useState(mockProperties)
 
-  const handleFilterChange = (filters: any) => {
+  const handleFilterChange = (filters: {
+    priceRange: [number, number]
+    bedrooms: number[]
+    bathrooms: number[]
+    propertyType: string[]
+    location: string[]
+    amenities: string[]
+  }) => {
     // In a real app, this would filter the properties based on the filters
     // For now, we'll just keep all properties
+    console.log('Filters applied:', filters)
     setFilteredProperties(mockProperties)
   }
 

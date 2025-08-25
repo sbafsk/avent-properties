@@ -42,7 +42,7 @@ export function PropertyFilterSidebar({ isOpen, onClose, onFilterChange }: Prope
 
   const amenities = ["Ocean View", "Private Pool", "Beach Access", "Golf Course", "Spa", "Gym", "Concierge", "Parking"]
 
-  const handleFilterChange = (key: keyof FilterState, value: any) => {
+  const handleFilterChange = (key: keyof FilterState, value: number[] | [number, number] | string[]) => {
     const newFilters = { ...filters, [key]: value }
     setFilters(newFilters)
     onFilterChange(newFilters)

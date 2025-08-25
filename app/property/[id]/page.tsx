@@ -48,7 +48,8 @@ const mockProperty = {
   ],
 }
 
-export default function PropertyDetailsPage({ params }: { params: { id: string } }) {
+export default function PropertyDetailsPage({ params: { id } }: { params: { id: string } }) {
+  console.log('Property ID:', id)
   return (
     <MainLayout>
       <div className="pt-24 px-4">
@@ -118,7 +119,7 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
                 </div>
                 <div className="mt-4 space-y-2">
                   <p className="text-luxury text-foreground">
-                    Located in the heart of Punta del Este's most exclusive neighborhood
+                    Located in the heart of Punta del Este&apos;s most exclusive neighborhood
                   </p>
                   <p className="text-luxury text-muted-foreground text-sm">
                     Walking distance to premium restaurants, golf courses, and cultural attractions

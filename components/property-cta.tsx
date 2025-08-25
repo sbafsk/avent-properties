@@ -8,7 +8,7 @@ interface PropertyCTAProps {
   propertyId: string
 }
 
-export function PropertyCTA({ price, currency, propertyId }: PropertyCTAProps) {
+export function PropertyCTA({ price, currency }: PropertyCTAProps) {
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",

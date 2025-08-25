@@ -25,12 +25,12 @@ export const client = new ApolloClient({
 			Query: {
 				fields: {
 					properties: {
-						merge(existing = [], incoming) {
+						merge(_, incoming) {
 							return incoming
 						},
 					},
 					tourReservations: {
-						merge(existing = [], incoming) {
+						merge(_, incoming) {
 							return incoming
 						},
 					},

@@ -123,11 +123,27 @@ export default function DashboardPage() {
     console.log("Profile updated:", updatedProfile)
   }
 
-  const handlePropertyAdd = (property: any) => {
+  const handlePropertyAdd = (property: {
+    title: string
+    location: string
+    price: number
+    type: string
+    bedrooms: number
+    bathrooms: number
+    area: number
+  }) => {
     console.log("Property added:", property)
   }
 
-  const handlePropertyEdit = (id: string, property: any) => {
+  const handlePropertyEdit = (id: string, property: {
+    title: string
+    location: string
+    price: number
+    type: string
+    bedrooms: number
+    bathrooms: number
+    area: number
+  }) => {
     console.log("Property edited:", id, property)
   }
 

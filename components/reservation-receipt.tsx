@@ -137,7 +137,7 @@ export function ReservationReceipt({
 
           {/* Next Steps */}
           <div className="border-t border-white/10 pt-6">
-            <h3 className="heading-luxury text-lg text-foreground mb-4">What's Next?</h3>
+            <h3 className="heading-luxury text-lg text-foreground mb-4">What&apos;s Next?</h3>
             <div className="space-y-3 text-sm">
               <div className="flex items-start space-x-3">
                 <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">

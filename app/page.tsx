@@ -2,6 +2,8 @@ import { MainLayout } from "@/components/main-layout"
 import { SectionHeader } from "@/components/section-header"
 import { GlassCard } from "@/components/glass-card"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import Image from "next/image"
 
 export default function HomePage() {
   return (
@@ -10,10 +12,13 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center px-4">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img
-            src="/luxury-coastal-property-uruguay-beach-sunset.png"
+          <Image
+            src="https://picsum.photos/1920/1080?random=1"
             alt="Luxury coastal property in Uruguay"
-            className="w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>
@@ -26,20 +31,24 @@ export default function HomePage() {
               <span className="text-gold block">Coastal Living</span>
             </h1>
             <p className="text-luxury text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Premium properties in Uruguay's most exclusive coastal destinations. Connecting Dubai investors with
+              Premium properties in Uruguay&apos;s most exclusive coastal destinations. Connecting Dubai investors with
               extraordinary real estate opportunities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gold text-gold-foreground hover:bg-gold/90 text-lg px-8 py-4">
-                Browse Properties
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="glass border-gold text-gold hover:bg-gold hover:text-gold-foreground text-lg px-8 py-4 bg-transparent"
-              >
-                Schedule Tour
-              </Button>
+              <Link href="/listings">
+                <Button size="lg" className="bg-gold text-gold-foreground hover:bg-gold/90 text-lg px-8 py-4">
+                  Browse Properties
+                </Button>
+              </Link>
+              <Link href="/tour-wizard">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="glass border-gold text-gold hover:bg-gold hover:text-gold-foreground text-lg px-8 py-4 bg-transparent"
+                >
+                  Schedule Tour
+                </Button>
+              </Link>
             </div>
           </GlassCard>
         </div>

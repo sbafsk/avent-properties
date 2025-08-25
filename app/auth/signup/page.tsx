@@ -6,7 +6,16 @@ import { useRouter } from "next/navigation"
 export default function SignUpPage() {
   const router = useRouter()
 
-  const handleSignUp = async (data: any) => {
+  const handleSignUp = async (data: {
+    email: string
+    password: string
+    confirmPassword: string
+    firstName: string
+    lastName: string
+    phone: string
+    location: string
+    company: string
+  }) => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000))
 

@@ -43,10 +43,10 @@ export default function AboutPage() {
           <div className="text-center max-w-4xl mx-auto">
             <SectionHeader
               title="About Avent Properties"
-              subtitle="Redefining luxury real estate in Uruguay's most prestigious locations"
+              subtitle="Redefining luxury real estate in Uruguay&apos;s most prestigious locations"
             />
             <p className="text-luxury text-lg text-muted-foreground leading-relaxed mt-6">
-              Founded in 2009, Avent Properties has established itself as Uruguay's premier luxury real estate agency.
+              Founded in 2009, Avent Properties has established itself as Uruguay&apos;s premier luxury real estate agency.
               We specialize in exclusive coastal properties, offering unparalleled service and expertise to discerning
               clients seeking exceptional homes in paradise.
             </p>
@@ -76,12 +76,12 @@ export default function AboutPage() {
               <div className="space-y-4 text-luxury text-muted-foreground leading-relaxed">
                 <p>
                   Avent Properties was born from a vision to transform how luxury real estate is experienced in Uruguay.
-                  Our founder, Sofia Rodriguez, recognized the untapped potential of Uruguay's stunning coastline and
+                  Our founder, Sofia Rodriguez, recognized the untapped potential of Uruguay&apos;s stunning coastline and
                   the growing demand for premium properties.
                 </p>
                 <p>
                   What started as a boutique agency has grown into the most trusted name in luxury real estate, known
-                  for our personalized approach, market expertise, and commitment to excellence. We don't just sell
+                  for our personalized approach, market expertise, and commitment to excellence. We don&apos;t just sell
                   properties; we curate lifestyles and create lasting relationships.
                 </p>
                 <p>
@@ -130,7 +130,7 @@ export default function AboutPage() {
           <GlassCard className="p-12 text-center">
             <h2 className="heading-luxury text-3xl text-foreground mb-4">Ready to Find Your Dream Property?</h2>
             <p className="text-luxury text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Let our experienced team guide you through Uruguay's most exclusive properties. Your perfect home awaits.
+              Let our experienced team guide you through Uruguay&apos;s most exclusive properties. Your perfect home awaits.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/listings">

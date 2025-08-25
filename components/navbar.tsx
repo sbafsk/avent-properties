@@ -53,7 +53,9 @@ export function Navbar() {
                 Sign In
               </Button>
             </Link>
-            <Button className="bg-gold text-gold-foreground hover:bg-gold/90">Schedule Tour</Button>
+            <Link href="/tour-wizard">
+              <Button className="bg-gold text-gold-foreground hover:bg-gold/90">Schedule Tour</Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -86,7 +88,9 @@ export function Navbar() {
                     Sign In
                   </Button>
                 </Link>
-                <Button className="bg-gold text-gold-foreground hover:bg-gold/90">Schedule Tour</Button>
+                <Link href="/tour-wizard">
+                  <Button className="bg-gold text-gold-foreground hover:bg-gold/90">Schedule Tour</Button>
+                </Link>
               </div>
             </div>
           </div>

@@ -10,9 +10,20 @@ import { SubmitButton } from "./submit-button"
 import { Button } from "@/components/ui/button"
 import { Mail, Lock, User, Phone, MapPin, Building } from "lucide-react"
 
+interface AuthFormData {
+  email: string
+  password: string
+  confirmPassword: string
+  firstName: string
+  lastName: string
+  phone: string
+  location: string
+  company: string
+}
+
 interface AuthFormProps {
   mode: "signin" | "signup"
-  onSubmit: (data: any) => Promise<void>
+  onSubmit: (data: AuthFormData) => Promise<void>
 }
 
 export function AuthForm({ mode, onSubmit }: AuthFormProps) {

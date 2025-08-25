@@ -35,9 +35,8 @@ interface AgencyPropertyManagerProps {
   onDelete: (id: string) => void
 }
 
-export function AgencyPropertyManager({ properties, onAdd, onEdit, onDelete }: AgencyPropertyManagerProps) {
+export function AgencyPropertyManager({ properties, onAdd, onDelete }: AgencyPropertyManagerProps) {
   const [isAddingProperty, setIsAddingProperty] = useState(false)
-  const [editingProperty, setEditingProperty] = useState<string | null>(null)
   const [newProperty, setNewProperty] = useState({
     title: "",
     location: "",

@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000))
       setSent(true)
-    } catch (error) {
+    } catch {
       setError("Something went wrong. Please try again.")
     } finally {
       setLoading(false)
@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
               <>
                 <h1 className="heading-luxury text-3xl text-foreground mb-2">Reset Password</h1>
                 <p className="text-luxury text-muted-foreground">
-                  Enter your email address and we'll send you a link to reset your password.
+                  Enter your email address and we&apos;ll send you a link to reset your password.
                 </p>
               </>
             ) : (
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
                 </div>
                 <h1 className="heading-luxury text-3xl text-foreground mb-2">Check Your Email</h1>
                 <p className="text-luxury text-muted-foreground">
-                  We've sent a password reset link to <strong>{email}</strong>
+                  We&apos;ve sent a password reset link to <strong>{email}</strong>
                 </p>
               </>
             )}
@@ -100,7 +100,7 @@ export default function ForgotPasswordPage() {
             <div className="space-y-6">
               <div className="p-4 glass rounded-lg border border-gold/20">
                 <p className="text-luxury text-sm text-muted-foreground">
-                  Didn't receive the email? Check your spam folder or{" "}
+                  Didn&apos;t receive the email? Check your spam folder or{" "}
                   <button
                     onClick={() => {
                       setSent(false)

@@ -16,7 +16,7 @@ export default function ContactPage() {
               subtitle="Get in touch with our luxury real estate experts"
             />
             <p className="text-luxury text-lg text-muted-foreground leading-relaxed mt-6">
-              Whether you're looking to buy, sell, or invest in luxury properties, our team is here to help. Reach out
+              Whether you&apos;re looking to buy, sell, or invest in luxury properties, our team is here to help. Reach out
               to us and discover how we can make your real estate dreams a reality.
             </p>
           </div>
