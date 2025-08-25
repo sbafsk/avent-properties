@@ -3,9 +3,12 @@
 import { AuthForm } from "@/components/auth-form"
 import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "@/lib/auth"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 
-export default function SignInPage() {
+// Force dynamic rendering to prevent prerendering issues
+export const dynamic = 'force-dynamic'
+
+function SignInContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
@@ -55,5 +58,13 @@ export default function SignInPage() {
       
       <AuthForm mode="signin" onSubmit={handleSignIn} />
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   )
 }

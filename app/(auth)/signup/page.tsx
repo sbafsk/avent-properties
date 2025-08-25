@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation"
 import { signUp } from "@/lib/auth"
 import { useState } from "react"
 
+// Force dynamic rendering to prevent prerendering issues
+export const dynamic = 'force-dynamic'
+
 export default function SignUpPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
