@@ -186,7 +186,12 @@ export function TourWizard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Preferred Date</label>
-                  <DatePicker date={formData.tourDate} onDateChange={(date) => updateFormData("tourDate", date)} />
+                  <DatePicker 
+                    selectedDate={formData.tourDate || undefined} 
+                    onDateSelect={(date) => updateFormData("tourDate", date || null)} 
+                    selectedTime=""
+                    onTimeSelect={() => {}}
+                  />
                 </div>
 
                 <div>
@@ -238,26 +243,26 @@ export function TourWizard() {
                 <InputField
                   label="First Name"
                   value={formData.firstName}
-                  onChange={(e) => updateFormData("firstName", e.target.value)}
+                  onChange={(value) => updateFormData("firstName", value)}
                   required
                 />
                 <InputField
                   label="Last Name"
                   value={formData.lastName}
-                  onChange={(e) => updateFormData("lastName", e.target.value)}
+                  onChange={(value) => updateFormData("lastName", value)}
                   required
                 />
                 <InputField
                   label="Email Address"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => updateFormData("email", e.target.value)}
+                  onChange={(value) => updateFormData("email", value)}
                   required
                 />
                 <InputField
                   label="Phone Number"
                   value={formData.phone}
-                  onChange={(e) => updateFormData("phone", e.target.value)}
+                  onChange={(value) => updateFormData("phone", value)}
                   required
                 />
               </div>

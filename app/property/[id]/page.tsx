@@ -48,7 +48,8 @@ const mockProperty = {
   ],
 }
 
-export default function PropertyDetailsPage({ params: { id } }: { params: { id: string } }) {
+export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   console.log('Property ID:', id)
   return (
     <MainLayout>

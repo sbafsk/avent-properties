@@ -8,22 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { GlassCard } from "./glass-card"
 import { Badge } from "@/components/ui/badge"
 import { User, Mail, Phone, MapPin, Edit, Save, X, Crown } from "lucide-react"
-
-interface UserProfile {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  location: string
-  preferredLanguage: "en" | "ar"
-  investmentBudget: string
-  propertyTypes: string[]
-  locations: string[]
-  membershipTier: "standard" | "premium" | "platinum"
-  joinDate: string
-  totalInvestment: number
-}
+import { UserProfile } from "@/lib/types"
 
 interface ProfileCardProps {
   profile: UserProfile

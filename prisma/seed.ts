@@ -338,7 +338,7 @@ async function main() {
             area_m2: 500,
             amenities: ['Panoramic Views', 'Private Terrace', 'Luxury Finishes', 'Concierge', 'Security'],
             images: ['/properties/penthouse-punta-1.jpg', '/properties/penthouse-punta-2.jpg'],
-            status: 'AVAILABLE',
+            status: 'AVAILABLE' as const,
             agency_id: agency1.id,
         },
         {
@@ -354,13 +354,13 @@ async function main() {
             area_m2: 280,
             amenities: ['Beach Access', 'Private Pool', 'Ocean View', 'Garden', 'Security'],
             images: ['/properties/villa-ji-3-1.jpg', '/properties/villa-ji-3-2.jpg'],
-            status: 'AVAILABLE',
+            status: 'AVAILABLE' as const,
             agency_id: agency2.id,
         },
     ]
 
     for (const property of properties) {
-        await prisma.property.create({ data: property })
+        await prisma.property.create({ data: property as any })
     }
 
     // Create sample users
@@ -397,26 +397,26 @@ async function main() {
             email: 'ahmed@dubaiinvestments.com',
             phone: '+971 50 123 4567',
             message: 'Interested in the Oceanfront Villa Punta del Este. Please provide more details about the property and available viewing times.',
-            status: 'NEW',
+            status: 'NEW' as const,
         },
         {
             name: 'Sarah Johnson',
             email: 'sarah.johnson@email.com',
             phone: '+1 555 123 4567',
             message: 'Looking for a luxury property in José Ignacio for investment purposes. Budget up to $3M USD.',
-            status: 'IN_PROGRESS',
+            status: 'IN_PROGRESS' as const,
         },
         {
             name: 'Carlos Rodriguez',
             email: 'carlos@argentina.com',
             phone: '+54 11 4567 8901',
             message: 'Interested in the Modern Penthouse José Ignacio. Can you arrange a virtual tour?',
-            status: 'RESOLVED',
+            status: 'RESOLVED' as const,
         },
     ]
 
     for (const contact of contactRequests) {
-        await prisma.contactRequest.create({ data: contact })
+        await prisma.contactRequest.create({ data: contact as any })
     }
 
     console.log('✅ Database seeded successfully!')

@@ -10,6 +10,7 @@ import { AdminTransactionTable } from "@/components/admin-transaction-table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { User, Calendar, Building, BarChart3, Settings, Crown } from "lucide-react"
+import { UserProfile, Property } from "@/lib/types"
 
 // Mock data
 const mockUserProfile = {
@@ -119,31 +120,15 @@ export default function DashboardPage() {
     { id: "settings", label: "Settings", icon: Settings },
   ]
 
-  const handleProfileUpdate = (updatedProfile: typeof mockUserProfile) => {
+  const handleProfileUpdate = (updatedProfile: UserProfile) => {
     console.log("Profile updated:", updatedProfile)
   }
 
-  const handlePropertyAdd = (property: {
-    title: string
-    location: string
-    price: number
-    type: string
-    bedrooms: number
-    bathrooms: number
-    area: number
-  }) => {
+  const handlePropertyAdd = (property: Omit<Property, "id" | "createdAt" | "updatedAt">) => {
     console.log("Property added:", property)
   }
 
-  const handlePropertyEdit = (id: string, property: {
-    title: string
-    location: string
-    price: number
-    type: string
-    bedrooms: number
-    bathrooms: number
-    area: number
-  }) => {
+  const handlePropertyEdit = (id: string, property: Partial<Property>) => {
     console.log("Property edited:", id, property)
   }
 

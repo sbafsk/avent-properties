@@ -46,7 +46,7 @@ export function AgencyPropertyManager({ properties, onAdd, onDelete }: AgencyPro
     bathrooms: 1,
     area: 0,
     type: "Villa",
-    status: "draft" as const,
+    status: "draft" as "active" | "pending" | "sold" | "draft",
     featured: false,
     images: [] as string[],
     description: "",
@@ -362,7 +362,7 @@ export function AgencyPropertyManager({ properties, onAdd, onDelete }: AgencyPro
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setEditingProperty(property.id)}
+                  onClick={() => console.log("Edit property:", property.id)}
                   className="glass border-white/20 text-foreground hover:border-gold hover:text-gold"
                 >
                   <Edit className="h-4 w-4 mr-2" />

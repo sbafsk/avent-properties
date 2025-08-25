@@ -104,6 +104,7 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ChartTooltipContent({
   active,
   payload,
@@ -125,6 +126,8 @@ function ChartTooltipContent({
     indicator?: "line" | "dot" | "dashed"
     nameKey?: string
     labelKey?: string
+    payload?: any
+    label?: any
   }) {
   const { config } = useChart()
 
@@ -250,6 +253,7 @@ function ChartTooltipContent({
 
 const ChartLegend = RechartsPrimitive.Legend
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ChartLegendContent({
   className,
   hideIcon = false,
@@ -257,9 +261,10 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> &
-  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+  Pick<RechartsPrimitive.LegendProps, "verticalAlign"> & {
     hideIcon?: boolean
     nameKey?: string
+    payload?: any
   }) {
   const { config } = useChart()
 
