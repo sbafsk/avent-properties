@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
+import { PerformanceMonitor } from "@/components/ui/performance-monitor"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${playfair.variable} ${inter.variable} antialiased`}>
-      <body className="min-h-screen bg-background font-sans">{children}</body>
+      <body className="min-h-screen bg-background font-sans">
+        {children}
+        <PerformanceMonitor />
+      </body>
     </html>
   )
 }
