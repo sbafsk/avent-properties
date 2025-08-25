@@ -125,14 +125,7 @@ export function AuthForm({ mode, onSubmit, demoCredentials }: AuthFormProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-black/95 to-black/90" />
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?key=auth-bg')] bg-cover bg-center opacity-20" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-md">
+    <div className="w-full max-w-md">
         <GlassCard className="p-8">
           {/* Logo and Header */}
           <div className="text-center mb-8">
@@ -354,6 +347,5 @@ export function AuthForm({ mode, onSubmit, demoCredentials }: AuthFormProps) {
           </p>
         </div>
       </div>
-    </div>
   )
 }
