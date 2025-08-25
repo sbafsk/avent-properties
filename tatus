@@ -1,0 +1,10 @@
+[33m90c9640[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m docs: update README with comprehensive project overview
+[33mb6fba9b[m feat: add Next.js app pages and routing
+[33mfad81b4[m feat: add comprehensive UI components and pages
+[33m95963b0[m docs: add comprehensive project documentation
+[33m74f112e[m feat: add authentication middleware and providers
+[33mb1ce641[m feat: add Redux state management with slices
+[33m6e9ac6f[m feat: add GraphQL API with complete schema and resolvers
+[33m70cab9d[m feat: add database schema and API infrastructure
+[33m63a6506[m feat: add code quality and testing configuration
+[33m2faca37[m feat: add code quality and development workflow configuration
