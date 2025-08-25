@@ -1,4 +1,3 @@
-import { MainLayout } from "@/components/main-layout"
 import { DashboardClient } from "@/components/dashboard-client"
 import { createClient } from '@/lib/supabase/server'
 
@@ -60,9 +59,5 @@ async function getDashboardData() {
 export default async function DashboardPage() {
   const dashboardData = await getDashboardData()
   
-  return (
-    <MainLayout>
-      <DashboardClient {...dashboardData} />
-    </MainLayout>
-  )
+  return <DashboardClient {...dashboardData} />
 }

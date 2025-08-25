@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { GlassCard } from "./glass-card"
 import { InputField } from "./input-field"
@@ -24,9 +24,13 @@ interface AuthFormData {
 interface AuthFormProps {
   mode: "signin" | "signup"
   onSubmit: (data: AuthFormData) => Promise<void>
+  demoCredentials?: {
+    email: string
+    password: string
+  }
 }
 
-export function AuthForm({ mode, onSubmit }: AuthFormProps) {
+export function AuthForm({ mode, onSubmit, demoCredentials }: AuthFormProps) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
@@ -41,6 +45,17 @@ export function AuthForm({ mode, onSubmit }: AuthFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const isSignUp = mode === "signup"
+
+  // Auto-fill form when demo credentials are provided
+  useEffect(() => {
+    if (demoCredentials) {
+      setFormData(prev => ({
+        ...prev,
+        email: demoCredentials.email,
+        password: demoCredentials.password
+      }))
+    }
+  }, [demoCredentials])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -137,6 +152,15 @@ export function AuthForm({ mode, onSubmit }: AuthFormProps) {
                 : "Sign in to access your luxury property portfolio"}
             </p>
           </div>
+
+          {/* Demo Credentials Notice */}
+          {demoCredentials && (
+            <div className="mb-6 p-3 bg-gold/10 border border-gold/20 rounded-lg">
+              <p className="text-luxury text-sm text-gold">
+                🎯 Demo credentials loaded! Ready to explore the platform.
+              </p>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">

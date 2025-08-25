@@ -1,13 +1,13 @@
-import { MainLayout } from "@/components/main-layout"
+import { DashboardLayout } from "@/components/dashboard-layout"
 
-export default function DashboardLayout({
+export default function DashboardLayoutWrapper({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <MainLayout>
+    <DashboardLayout>
       {children}
-    </MainLayout>
+    </DashboardLayout>
   )
 }
