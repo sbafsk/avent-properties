@@ -82,7 +82,7 @@ describe("PropertyCard", () => {
     render(<PropertyCard {...mockProperty} />);
     
     // The heart icon should be present (it's a button with Heart icon)
-    const heartButton = screen.getByRole("button", { name: "" }); // Heart button doesn't have accessible name
+    const heartButton = screen.getByRole("button", { name: "Add to favorites" });
     expect(heartButton).toBeInTheDocument();
   });
 
