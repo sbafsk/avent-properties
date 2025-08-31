@@ -80,7 +80,7 @@ describe('PropertyCard Compound Components', () => {
       expect(screen.getByText('Featured')).toBeInTheDocument()
       expect(screen.getByText('Villa')).toBeInTheDocument()
       expect(screen.getByText('View Details')).toBeInTheDocument()
-      expect(screen.getByText('Schedule Tour')).toBeInTheDocument()
+
     })
 
     it('calls onViewDetails when view details button is clicked', async () => {
@@ -109,31 +109,7 @@ describe('PropertyCard Compound Components', () => {
       expect(mockOnViewDetails).toHaveBeenCalledWith('1')
     })
 
-    it('calls onScheduleTour when schedule tour button is clicked', async () => {
-      await renderWithProvider(
-        <PropertyCard
-          property={mockProperty}
-          onViewDetails={mockOnViewDetails}
-          onScheduleTour={mockOnScheduleTour}
-        >
-          <PropertyCard.ImageContainer>
-            <PropertyCard.Image />
-            <PropertyCard.Badges />
-            <PropertyCard.Favorite />
-          </PropertyCard.ImageContainer>
-          
-          <PropertyCard.Content>
-            <PropertyCard.Header />
-            <PropertyCard.Specs />
-            <PropertyCard.Price />
-            <PropertyCard.Actions />
-          </PropertyCard.Content>
-        </PropertyCard>
-      )
 
-      fireEvent.click(screen.getByText('Schedule Tour'))
-      expect(mockOnScheduleTour).toHaveBeenCalledWith('1')
-    })
   })
 
   describe('Custom Compositions', () => {

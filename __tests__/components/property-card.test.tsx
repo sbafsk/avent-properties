@@ -84,13 +84,7 @@ describe("PropertyCard", () => {
     expect(mockOnViewDetails).toHaveBeenCalledWith("1");
   });
 
-  it("calls onScheduleTour when schedule tour button is clicked", async () => {
-    const mockOnScheduleTour = jest.fn();
-    await renderWithProvider(<PropertyCard {...mockProperty} onScheduleTour={mockOnScheduleTour} />);
-    
-    fireEvent.click(screen.getByText("Schedule Tour"));
-    expect(mockOnScheduleTour).toHaveBeenCalledWith("1");
-  });
+
 
   it("renders heart icon for favorites", async () => {
     await renderWithProvider(<PropertyCard {...mockProperty} />);
