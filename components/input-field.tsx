@@ -46,7 +46,7 @@ export interface InputFieldProps {
 
 // Utility function for event handler composition
 function callAll<T extends (...args: any[]) => any>(...fns: (T | undefined)[]): T {
-    return ((...args: any[]) => {
+    return ((...args: Parameters<T>) => {
         fns.forEach(fn => {
             if (fn) {
                 fn(...args)

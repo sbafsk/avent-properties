@@ -44,10 +44,6 @@ export function TourWizard() {
   const [formData, setFormData] = useState<TourWizardData>(initialData)
   const totalSteps = 5
 
-  const updateFormData = (field: keyof TourWizardData, value: string | Date | null) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
-
   const nextStep = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
@@ -101,10 +97,10 @@ export function TourWizard() {
                 <div key={step.number} className="flex items-center">
                   <div
                     className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all ${isCompleted
-                        ? "bg-gold border-gold text-gold-foreground"
-                        : isActive
-                          ? "border-gold text-gold bg-gold/10"
-                          : "border-muted text-muted-foreground"
+                      ? "bg-gold border-gold text-gold-foreground"
+                      : isActive
+                        ? "border-gold text-gold bg-gold/10"
+                        : "border-muted text-muted-foreground"
                       }`}
                   >
                     {isCompleted ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
@@ -128,10 +124,8 @@ export function TourWizard() {
         <TourWizardControlProps
           currentStep={currentStep}
           formData={formData}
-          onFormDataChange={handleWizardChange}
-          onNextStep={nextStep}
-          onPrevStep={prevStep}
-          onSubmit={handleSubmit}
+          onDataChange={handleWizardChange}
+          onStepChange={setCurrentStep}
         />
 
         {/* Navigation Buttons */}
@@ -161,4 +155,4 @@ export function TourWizard() {
       </div>
     </div>
   )
-}
+}                                                                                                                                                                                                                           

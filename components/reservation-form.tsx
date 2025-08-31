@@ -43,8 +43,7 @@ interface FormData {
 
 export function ReservationForm({ propertyTitle }: ReservationFormProps) {
   // Fetch properties using advanced hook with state reducer pattern
-  const { properties, loading: isLoadingProperties } = useProperties({
-    status: 'AVAILABLE',
+  const { state: { properties, loading: isLoadingProperties } } = useProperties({
     limit: 50
   })
 

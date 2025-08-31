@@ -26,9 +26,7 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
   
   // Use advanced properties hook with state reducer pattern
   const { 
-    properties, 
-    loading, 
-    error
+    state: { properties, loading, error }
   } = useProperties({
     limit: 100
   });
