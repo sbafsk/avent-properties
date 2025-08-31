@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 
 // Types
 export interface InputFieldState {
@@ -57,7 +57,6 @@ function callAll<T extends (...args: any[]) => any>(...fns: (T | undefined)[]): 
 
 // Prop Collections and Getters Hook
 export function useInputField({
-    label,
     type = 'text',
     placeholder,
     value,
@@ -69,7 +68,6 @@ export function useInputField({
     disabled = false,
     readOnly = false,
     validation,
-    showValidation = true,
     autoComplete,
     autoFocus = false,
     id,
@@ -136,7 +134,8 @@ export function useInputField({
 
     // Prop Collections (pre-configured prop objects)
     const inputId = id || name || `input-${Math.random().toString(36).substr(2, 9)}`
-    const inputProps = {
+    
+    const inputProps = useMemo(() => ({
         type: inputType,
         placeholder,
         value,
@@ -152,27 +151,27 @@ export function useInputField({
         'aria-invalid': hasError,
         'aria-describedby': hasError ? `${inputId}-error` : undefined,
         'aria-required': required,
-    }
+    }), [inputType, placeholder, value, handleChange, handleFocus, handleBlur, disabled, readOnly, autoComplete, autoFocus, inputId, name, hasError, required])
 
-    const labelProps = {
+    const labelProps = useMemo(() => ({
         htmlFor: inputId,
         className: cn(
             "text-foreground font-medium",
             hasError && "text-red-500",
             isValid && "text-green-600"
         ),
-    }
+    }), [inputId, hasError, isValid])
 
-    const containerProps = {
+    const containerProps = useMemo(() => ({
         className: cn(
             "space-y-2",
             hasError && "text-red-500",
             isValid && "text-green-600"
         ),
-    }
+    }), [hasError, isValid])
 
     // Prop Getters (functions for composition)
-    const getInputProps = useCallback(({ className, onChange: customOnChange, onFocus: customOnFocus, onBlur: customOnBlur, ...props } = {}) => ({
+    const getInputProps = useCallback(({ className, onChange: customOnChange, onFocus: customOnFocus, onBlur: customOnBlur, ...props }: { className?: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; onFocus?: () => void; onBlur?: () => void; [key: string]: unknown } = {}) => ({
         ...inputProps,
         onChange: customOnChange ? callAll(handleChange, customOnChange) : handleChange,
         onFocus: customOnFocus ? callAll(handleFocus, customOnFocus) : handleFocus,
@@ -187,19 +186,19 @@ export function useInputField({
         ...props,
     }), [inputProps, hasError, isValid, isFocused, handleChange, handleFocus, handleBlur])
 
-    const getLabelProps = useCallback(({ className, ...props } = {}) => ({
+    const getLabelProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
         ...labelProps,
         className: cn(labelProps.className, className),
         ...props,
     }), [labelProps])
 
-    const getContainerProps = useCallback(({ className, ...props } = {}) => ({
+    const getContainerProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
         ...containerProps,
         className: cn(containerProps.className, className),
         ...props,
     }), [containerProps])
 
-    const getToggleButtonProps = useCallback(({ onClick, ...props } = {}) => ({
+    const getToggleButtonProps = useCallback(({ onClick, ...props }: { onClick?: () => void; [key: string]: unknown } = {}) => ({
         type: 'button' as const,
         variant: 'ghost' as const,
         size: 'sm' as const,
@@ -209,7 +208,7 @@ export function useInputField({
         ...props,
     }), [togglePasswordVisibility, showPassword])
 
-    const getValidationIconProps = useCallback(({ className, ...props } = {}) => ({
+    const getValidationIconProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
         className: cn(
             "absolute right-8 top-1/2 transform -translate-y-1/2 h-4 w-4",
             hasError && "text-red-500",
@@ -219,14 +218,14 @@ export function useInputField({
         ...props,
     }), [hasError, isValid])
 
-    const getErrorProps = useCallback(({ className, ...props } = {}) => ({
+    const getErrorProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
         id: `${inputId}-error`,
         role: 'alert',
         className: cn("text-red-500 text-sm mt-1", className),
         ...props,
     }), [inputId])
 
-    const getSuccessProps = useCallback(({ className, ...props } = {}) => ({
+    const getSuccessProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
         className: cn("text-green-600 text-sm mt-1", className),
         ...props,
     }), [])
@@ -411,5 +410,4 @@ export function PhoneInput(props: Omit<InputFieldProps, 'type' | 'validation'>) 
     )
 }
 
-// Export the hook for custom implementations
-export { useInputField }
+// Hook is already exported above

@@ -143,7 +143,7 @@ export function CustomInputExample() {
         </div>
         
         <div className="text-sm text-gray-600">
-          <p>Current value: "{value}"</p>
+          <p>Current value: &quot;{value}&quot;</p>
           <p>Has error: {hasError.toString()}</p>
           <p>Is touched: {state.isTouched.toString()}</p>
         </div>
@@ -171,7 +171,7 @@ export function EventCompositionExample() {
     onBlur: () => setBlurCount(prev => prev + 1),
   })
 
-  const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomChange = () => {
     setChangeCount(prev => prev + 1)
     console.log('Custom change handler called')
   }
@@ -349,7 +349,7 @@ export function AdvancedFormExample() {
     setSubmitMessage('')
     
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await new Promise<void>(resolve => setTimeout(resolve, 2000))
     
     setIsSubmitting(false)
     setSubmitMessage('Form submitted successfully!')

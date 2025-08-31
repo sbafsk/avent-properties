@@ -12,6 +12,9 @@ const customJestConfig = {
 	moduleNameMapper: {
 		'^@/(.*)$': '<rootDir>/$1',
 	},
+	// Suppress console warnings for act() in tests
+	silent: false,
+	verbose: false,
 
 	collectCoverageFrom: [
 		'app/**/*.{js,jsx,ts,tsx}',
