@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-black/95 to-black/90" />
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?key=auth-bg')] bg-cover bg-center opacity-20" />
+        {/* <div className="absolute inset-0 bg-[url('/placeholder.svg?key=auth-bg')] bg-cover bg-center opacity-20" /> */}
       </div>
 
       <div className="relative z-10 w-full max-w-md">
