@@ -1,18 +1,12 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useMemo } from 'react'
-import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { GlassCard } from '@/components/glass-card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { PropertyFilterSidebar } from '@/components/property-filter-sidebar'
-import { PropertySkeleton } from '@/components/ui/property-skeleton'
-import { SectionLoading } from '@/components/ui/page-loading'
-import { MapPin, Filter } from 'lucide-react'
-import { PropertyImage } from '@/components/ui/optimized-image'
-import { useProperties } from '@/lib/hooks'
-import type { Property } from '@/lib/hooks'
+import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { ListingsFilters } from "@/components/sections/listings-filters";
+import { ListingsResults } from "@/components/sections/listings-results";
+import { PropertyGridSkeleton } from "@/components/ui/property-grid-skeleton";
+import { useProperties } from "@/hooks/use-properties";
+import type { Property } from "@/hooks/use-properties";
 
 interface FilterState {
   priceRange: [number, number]
@@ -28,26 +22,25 @@ interface ListingsWithFiltersProps {
 }
 
 export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersProps) {
+  const router = useRouter();
+  
   // Use Supabase GraphQL hooks for data fetching
   const { 
     properties, 
-    isLoading, 
-    isError, 
-    error,
-    refetch 
+    loading, 
+    error
   } = useProperties({
-    status: 'AVAILABLE',
     limit: 100
-  })
+  });
 
   // Use initial properties if provided (server-side), otherwise use fetched properties
   const allProperties = useMemo(() => {
-    return properties && properties.length > 0 ? properties : (initialProperties || [])
-  }, [properties, initialProperties])
+    return properties && properties.length > 0 ? properties : (initialProperties || []);
+  }, [properties, initialProperties]);
   
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties)
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [isFiltering, setIsFiltering] = useState(false)
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   // Update filtered properties when properties data changes
   useEffect(() => {
@@ -90,7 +83,7 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
       // Amenities filter
       if (filters.amenities.length > 0 && property.amenities) {
         const hasRequiredAmenity = filters.amenities.some(amenity => 
-          property.amenities.includes(amenity)
+          property.amenities!.includes(amenity)
         )
         if (!hasRequiredAmenity) {
           return false
@@ -102,213 +95,59 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
   }
 
   const handleFilterChange = (filters: FilterState) => {
-    setIsFiltering(true)
+    setIsFiltering(true);
     
     // Simulate filtering delay for better UX
     setTimeout(() => {
-      const filtered = applyFilters(allProperties, filters)
-      setFilteredProperties(filtered)
-      setIsFiltering(false)
-    }, 300)
-  }
+      const filtered = applyFilters(allProperties, filters);
+      setFilteredProperties(filtered);
+      setIsFiltering(false);
+    }, 300);
+  };
 
-  // Handle error state
-  if (isError) {
-    return (
-      <div className="text-center py-16">
-        <div className="max-w-md mx-auto">
-          <h3 className="heading-luxury text-xl text-foreground mb-2">Error Loading Properties</h3>
-          <p className="text-luxury text-muted-foreground mb-4">
-            {error?.message || 'Failed to load properties'}
-          </p>
-          <Button onClick={() => refetch()} className="bg-gold text-gold-foreground hover:bg-gold/90">
-            Try Again
-          </Button>
-        </div>
-      </div>
-    )
-  }
+  const handleViewDetails = (id: string) => {
+    router.push(`/property/${id}`);
+  };
+
+  const handleScheduleTour = (id: string) => {
+    router.push(`/tour-wizard?property=${id}`);
+  };
 
   // Only show loading if we don't have initial properties and are still loading
-  if (isLoading && !initialProperties) {
+  if (loading && !initialProperties) {
     return (
       <div className="flex gap-8">
-        <PropertyFilterSidebar
-          isOpen={isFilterOpen}
-          onClose={() => setIsFilterOpen(false)}
+        <ListingsFilters
+          isFilterOpen={isFilterOpen}
+          onFilterOpen={() => setIsFilterOpen(true)}
+          onFilterClose={() => setIsFilterOpen(false)}
           onFilterChange={handleFilterChange}
         />
         <div className="flex-1">
-          <PropertySkeleton count={6} />
+          <PropertyGridSkeleton count={6} />
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex gap-8">
-      {/* Filter Sidebar */}
-      <PropertyFilterSidebar
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
+      <ListingsFilters
+        isFilterOpen={isFilterOpen}
+        onFilterOpen={() => setIsFilterOpen(true)}
+        onFilterClose={() => setIsFilterOpen(false)}
         onFilterChange={handleFilterChange}
       />
 
-      {/* Main Content */}
-      <div className="flex-1">
-        {/* Mobile Filter Toggle */}
-        <div className="lg:hidden mb-6">
-          <Button
-            onClick={() => setIsFilterOpen(true)}
-            variant="outline"
-            className="glass border-white/20 text-foreground hover:border-gold"
-          >
-            <Filter className="h-4 w-4 mr-2" />
-            Filters
-          </Button>
-        </div>
-
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className="text-luxury text-muted-foreground">
-            Showing {filteredProperties.length} of {allProperties.length} properties
-          </p>
-        </div>
-
-        {/* Loading State for Filtering */}
-        <AnimatePresence mode="wait">
-          {isFiltering ? (
-            <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <SectionLoading message="Applying filters..." />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="properties"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Properties Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <AnimatePresence mode="wait">
-                  {filteredProperties.map((property, index) => (
-                    <motion.div
-                      key={property.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ 
-                        duration: 0.3,
-                        delay: index * 0.1
-                      }}
-                    >
-                      <GlassCard className="overflow-hidden group hover:scale-105 transition-transform duration-300">
-                        {/* Property Image */}
-                        <div className="aspect-video bg-gradient-to-br from-gold/20 to-gold/5 relative overflow-hidden">
-                          {property.images && property.images.length > 0 ? (
-                            <PropertyImage 
-                              src={property.images[0]} 
-                              alt={property.title}
-                              className="w-full h-full group-hover:scale-110 transition-transform duration-300"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                              <MapPin className="h-12 w-12 opacity-50" />
-                            </div>
-                          )}
-                          
-                          {/* Price Badge */}
-                          <div className="absolute top-4 right-4">
-                            <Badge className="bg-gold text-gold-foreground font-semibold">
-                              ${property.price.toLocaleString()}
-                            </Badge>
-                          </div>
-                          
-                          {/* Property Type Badge */}
-                          <div className="absolute top-4 left-4">
-                            <Badge variant="outline" className="glass border-white/20 text-foreground">
-                              {property.property_type}
-                            </Badge>
-                          </div>
-                        </div>
-                        
-                        {/* Property Details */}
-                        <div className="p-6">
-                          <h3 className="heading-luxury text-xl text-foreground mb-2 group-hover:text-gold transition-colors">
-                            {property.title}
-                          </h3>
-                          
-                          <div className="flex items-center text-muted-foreground mb-4">
-                            <MapPin className="h-4 w-4 mr-2" />
-                            <span className="text-luxury">{property.city}, {property.neighborhood}</span>
-                          </div>
-                          
-                          {/* Property Specs */}
-                          <div className="flex items-center justify-between text-sm text-muted-foreground mb-6">
-                            <div className="flex items-center space-x-4">
-                              {property.bedrooms && (
-                                <span className="flex items-center">
-                                  <span className="font-semibold text-foreground">{property.bedrooms}</span>
-                                  <span className="ml-1">beds</span>
-                                </span>
-                              )}
-                              {property.bathrooms && (
-                                <span className="flex items-center">
-                                  <span className="font-semibold text-foreground">{property.bathrooms}</span>
-                                  <span className="ml-1">baths</span>
-                                </span>
-                              )}
-                              {property.area_m2 && (
-                                <span className="flex items-center">
-                                  <span className="font-semibold text-foreground">{property.area_m2}</span>
-                                  <span className="ml-1">m²</span>
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          
-                          {/* CTA Button */}
-                          <Link 
-                            href={`/property/${property.id}`}
-                            className="w-full bg-gold text-gold-foreground py-3 px-6 rounded-lg hover:bg-gold/90 transition-colors text-center block font-semibold"
-                          >
-                            View Details
-                          </Link>
-                        </div>
-                      </GlassCard>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Empty State */}
-        {filteredProperties.length === 0 && !isFiltering && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-center py-16"
-          >
-            <div className="max-w-md mx-auto">
-              <MapPin className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="heading-luxury text-xl text-foreground mb-2">No Properties Found</h3>
-              <p className="text-luxury text-muted-foreground">
-                Try adjusting your filters to see more properties.
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </div>
+      <ListingsResults
+        properties={filteredProperties}
+        allPropertiesCount={allProperties.length}
+        loading={loading}
+        filtering={isFiltering}
+        error={error}
+        onViewDetails={handleViewDetails}
+        onScheduleTour={handleScheduleTour}
+      />
     </div>
-  )
+  );
 }
