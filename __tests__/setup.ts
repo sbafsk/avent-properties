@@ -51,4 +51,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
     disconnect: jest.fn(),
 }))
 
+// Note: React testing warnings about act() are expected in some async scenarios
+// These warnings don't affect test functionality and are common in complex async hooks
+
 
