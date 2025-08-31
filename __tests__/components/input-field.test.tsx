@@ -1,12 +1,12 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import {
-    InputFieldAdvanced,
+    InputField,
     useInputField,
     EmailInput,
     PasswordInput,
     PhoneInput
-} from '@/components/input-field-advanced'
+} from '@/components/input-field'
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -16,7 +16,7 @@ jest.mock('next/navigation', () => ({
     }),
 }))
 
-describe('InputFieldAdvanced', () => {
+describe('InputField', () => {
     const mockOnChange = jest.fn()
     const mockOnFocus = jest.fn()
     const mockOnBlur = jest.fn()
@@ -28,7 +28,7 @@ describe('InputFieldAdvanced', () => {
     describe('Basic Functionality', () => {
         it('should render with basic props', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -41,7 +41,7 @@ describe('InputFieldAdvanced', () => {
 
         it('should display label and required indicator', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Required Field"
                     value=""
                     onChange={mockOnChange}
@@ -55,7 +55,7 @@ describe('InputFieldAdvanced', () => {
 
         it('should handle value changes', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -70,7 +70,7 @@ describe('InputFieldAdvanced', () => {
 
         it('should handle focus and blur events', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -92,7 +92,7 @@ describe('InputFieldAdvanced', () => {
     describe('Validation and Error Handling', () => {
         it('should display error message', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -106,7 +106,7 @@ describe('InputFieldAdvanced', () => {
 
         it('should show validation icon for errors', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -120,7 +120,7 @@ describe('InputFieldAdvanced', () => {
 
         it('should show success state for valid input', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value="valid input"
                     onChange={mockOnChange}
@@ -144,7 +144,7 @@ describe('InputFieldAdvanced', () => {
             }
 
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -163,7 +163,7 @@ describe('InputFieldAdvanced', () => {
     describe('Password Input', () => {
         it('should toggle password visibility', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Password"
                     type="password"
                     value="password123"
@@ -185,7 +185,7 @@ describe('InputFieldAdvanced', () => {
     describe('Accessibility', () => {
         it('should have proper ARIA attributes', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -202,7 +202,7 @@ describe('InputFieldAdvanced', () => {
 
         it('should associate label with input', () => {
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Test Input"
                     value=""
                     onChange={mockOnChange}
@@ -223,7 +223,7 @@ describe('InputFieldAdvanced', () => {
             const TestIcon = () => <span data-testid="test-icon">📧</span>
 
             render(
-                <InputFieldAdvanced
+                <InputField
                     label="Email"
                     value=""
                     onChange={mockOnChange}

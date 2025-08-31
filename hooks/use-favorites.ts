@@ -1,62 +1,57 @@
 /**
- * Favorites Hook - Advanced React Patterns Implementation
+ * Favorites Hook using Context Module Functions Pattern
  * 
- * This hook now uses the Context Module Functions pattern for better performance
- * and maintainability. It provides the same API as before for backward compatibility.
- * 
- * @deprecated This hook is being migrated to use the advanced patterns.
- * Consider using the new useFavorites hook from use-favorites-advanced.ts
+ * This hook demonstrates the Context Module Functions pattern from Kent C. Dodds'
+ * Advanced React Patterns. It provides a clean API while leveraging the
+ * performance benefits of module-level functions.
  */
 
-import { useState, useEffect, useCallback } from "react";
-
-const FAVORITES_KEY = "avent-properties-favorites";
+import { useCallback } from 'react'
+import { useFavoritesContext } from './favorites-context'
+import {
+    addFavorite,
+    removeFavorite,
+    toggleFavorite,
+    clearFavorites,
+    setFavorites,
+} from './favorites-actions'
 
 export function useFavorites() {
-    const [favorites, setFavorites] = useState<string[]>([]);
+    const { state, dispatch } = useFavoritesContext()
 
-    // Load favorites from localStorage on mount
-    useEffect(() => {
-        const stored = localStorage.getItem(FAVORITES_KEY);
-        if (stored) {
-            try {
-                setFavorites(JSON.parse(stored));
-            } catch {
-                setFavorites([]);
-            }
-        }
-    }, []);
+    // Create action creators using the context module functions
+    const addFavoriteAction = useCallback(addFavorite(dispatch), [dispatch])
+    const removeFavoriteAction = useCallback(removeFavorite(dispatch), [dispatch])
+    const toggleFavoriteAction = useCallback(toggleFavorite(dispatch), [dispatch])
+    const clearFavoritesAction = useCallback(clearFavorites(dispatch), [dispatch])
+    const setFavoritesAction = useCallback(setFavorites(dispatch), [dispatch])
 
-    // Save favorites to localStorage whenever it changes
-    useEffect(() => {
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-    }, [favorites]);
-
-    const toggleFavorite = useCallback((propertyId: string) => {
-        setFavorites((prev) =>
-            prev.includes(propertyId)
-                ? prev.filter((id) => id !== propertyId)
-                : [...prev, propertyId]
-        );
-    }, []);
-
+    // Helper function to check if a property is favorited
     const isFavorite = useCallback(
         (propertyId: string) => {
-            return favorites.includes(propertyId);
+            return state.favorites.includes(propertyId)
         },
-        [favorites]
-    );
+        [state.favorites]
+    )
 
-    const clearFavorites = useCallback(() => {
-        setFavorites([]);
-    }, []);
+    // Helper function to get favorites count
+    const favoritesCount = state.favorites.length
 
     return {
-        favorites,
-        toggleFavorite,
+        // State
+        favorites: state.favorites,
+        loading: state.loading,
+        error: state.error,
+        favoritesCount,
+
+        // Actions
+        addFavorite: addFavoriteAction,
+        removeFavorite: removeFavoriteAction,
+        toggleFavorite: toggleFavoriteAction,
+        clearFavorites: clearFavoritesAction,
+        setFavorites: setFavoritesAction,
+
+        // Helper functions
         isFavorite,
-        clearFavorites,
-    };
+    }
 }
-
-

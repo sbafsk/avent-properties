@@ -1,6 +1,7 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { PropertyCard } from "@/components/property-card";
+import { FavoritesProvider } from "@/hooks/favorites-context";
 
 // Mock the useFavorites hook
 jest.mock("@/hooks/use-favorites", () => ({
@@ -32,9 +33,22 @@ const mockProperty = {
   featured: false,
 };
 
+// Helper function to render with FavoritesProvider
+const renderWithProvider = async (component: React.ReactElement) => {
+  let result: any;
+  await act(async () => {
+    result = render(
+      <FavoritesProvider>
+        {component}
+      </FavoritesProvider>
+    );
+  });
+  return result;
+};
+
 describe("PropertyCard", () => {
-  it("renders property information correctly", () => {
-    render(<PropertyCard {...mockProperty} />);
+  it("renders property information correctly", async () => {
+    await renderWithProvider(<PropertyCard {...mockProperty} />);
     
     expect(screen.getByText("Luxury Beach House")).toBeInTheDocument();
     expect(screen.getByText("Punta del Este, La Barra")).toBeInTheDocument();
@@ -42,51 +56,51 @@ describe("PropertyCard", () => {
     expect(screen.getByText("House")).toBeInTheDocument();
   });
 
-  it("renders property specifications", () => {
-    render(<PropertyCard {...mockProperty} />);
+  it("renders property specifications", async () => {
+    await renderWithProvider(<PropertyCard {...mockProperty} />);
     
     expect(screen.getByText("4")).toBeInTheDocument(); // bedrooms
     expect(screen.getByText("3")).toBeInTheDocument(); // bathrooms
     expect(screen.getByText("250m²")).toBeInTheDocument(); // area
   });
 
-  it("shows featured badge when property is featured", () => {
-    render(<PropertyCard {...mockProperty} featured />);
+  it("shows featured badge when property is featured", async () => {
+    await renderWithProvider(<PropertyCard {...mockProperty} featured />);
     
     expect(screen.getByText("Featured")).toBeInTheDocument();
   });
 
-  it("does not show featured badge when property is not featured", () => {
-    render(<PropertyCard {...mockProperty} featured={false} />);
+  it("does not show featured badge when property is not featured", async () => {
+    await renderWithProvider(<PropertyCard {...mockProperty} featured={false} />);
     
     expect(screen.queryByText("Featured")).not.toBeInTheDocument();
   });
 
-  it("calls onViewDetails when view details button is clicked", () => {
+  it("calls onViewDetails when view details button is clicked", async () => {
     const mockOnViewDetails = jest.fn();
-    render(<PropertyCard {...mockProperty} onViewDetails={mockOnViewDetails} />);
+    await renderWithProvider(<PropertyCard {...mockProperty} onViewDetails={mockOnViewDetails} />);
     
     fireEvent.click(screen.getByText("View Details"));
     expect(mockOnViewDetails).toHaveBeenCalledWith("1");
   });
 
-  it("calls onScheduleTour when schedule tour button is clicked", () => {
+  it("calls onScheduleTour when schedule tour button is clicked", async () => {
     const mockOnScheduleTour = jest.fn();
-    render(<PropertyCard {...mockProperty} onScheduleTour={mockOnScheduleTour} />);
+    await renderWithProvider(<PropertyCard {...mockProperty} onScheduleTour={mockOnScheduleTour} />);
     
     fireEvent.click(screen.getByText("Schedule Tour"));
     expect(mockOnScheduleTour).toHaveBeenCalledWith("1");
   });
 
-  it("renders heart icon for favorites", () => {
-    render(<PropertyCard {...mockProperty} />);
+  it("renders heart icon for favorites", async () => {
+    await renderWithProvider(<PropertyCard {...mockProperty} />);
     
     // The heart icon should be present (it's a button with Heart icon)
     const heartButton = screen.getByRole("button", { name: "Add to favorites" });
     expect(heartButton).toBeInTheDocument();
   });
 
-  it("handles missing optional properties gracefully", () => {
+  it("handles missing optional properties gracefully", async () => {
     const propertyWithoutOptionals = {
       ...mockProperty,
       bedrooms: undefined,
@@ -95,15 +109,15 @@ describe("PropertyCard", () => {
       neighborhood: undefined,
     };
     
-    render(<PropertyCard {...propertyWithoutOptionals} />);
+    await renderWithProvider(<PropertyCard {...propertyWithoutOptionals} />);
     
     expect(screen.getByText("Luxury Beach House")).toBeInTheDocument();
     expect(screen.getByText("Punta del Este")).toBeInTheDocument(); // No neighborhood
     expect(screen.getByText("$1,500,000")).toBeInTheDocument();
   });
 
-  it("applies custom className", () => {
-    const { container } = render(
+  it("applies custom className", async () => {
+    const { container } = await renderWithProvider(
       <PropertyCard {...mockProperty} className="custom-class" />
     );
     

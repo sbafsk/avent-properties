@@ -24,7 +24,7 @@ interface ListingsWithFiltersProps {
 export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersProps) {
   const router = useRouter();
   
-  // Use Supabase GraphQL hooks for data fetching
+  // Use advanced properties hook with state reducer pattern
   const { 
     properties, 
     loading, 

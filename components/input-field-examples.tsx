@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react'
 import { 
-  InputFieldAdvanced, 
+  InputField, 
   useInputField, 
   EmailInput, 
   PasswordInput, 
   PhoneInput 
-} from '@/components/input-field-advanced'
+} from '@/components/input-field'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Mail, Lock, Phone, User, MapPin } from 'lucide-react'
@@ -29,7 +29,7 @@ export function BasicInputExample() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <InputFieldAdvanced
+        <InputField
           label="Full Name"
           value={formData.name}
           onChange={(value) => setFormData(prev => ({ ...prev, name: value }))}
@@ -300,7 +300,7 @@ export function SpecializedInputsExample() {
           error={errors.phone}
         />
         
-        <InputFieldAdvanced
+        <InputField
           label="Website"
           type="url"
           value={formData.website}
@@ -368,7 +368,7 @@ export function AdvancedFormExample() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <InputFieldAdvanced
+          <InputField
             label="First Name"
             value={formData.firstName}
             onChange={(value) => setFormData(prev => ({ ...prev, firstName: value }))}
@@ -377,7 +377,7 @@ export function AdvancedFormExample() {
             icon={<User className="h-4 w-4" />}
           />
           
-          <InputFieldAdvanced
+          <InputField
             label="Last Name"
             value={formData.lastName}
             onChange={(value) => setFormData(prev => ({ ...prev, lastName: value }))}
@@ -414,7 +414,7 @@ export function AdvancedFormExample() {
           icon={<Phone className="h-4 w-4" />}
         />
         
-        <InputFieldAdvanced
+        <InputField
           label="Address"
           value={formData.address}
           onChange={(value) => setFormData(prev => ({ ...prev, address: value }))}

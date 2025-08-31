@@ -1,9 +1,9 @@
 /**
- * Tests for usePropertiesAdvanced Hook with State Reducer Pattern
+ * Tests for useProperties Hook with State Reducer Pattern
  */
 
 import { renderHook, act } from '@testing-library/react'
-import { usePropertiesAdvanced } from '@/hooks/use-properties-advanced'
+import { useProperties } from '@/hooks/use-properties'
 import { propertiesReducer } from '@/hooks/properties-reducer'
 import { defaultPropertiesState, type PropertiesAction, type Property } from '@/hooks/properties-actions'
 
@@ -66,14 +66,14 @@ const mockProperties: Property[] = [
   },
 ]
 
-describe('usePropertiesAdvanced Hook', () => {
+describe('useProperties Hook', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   describe('Initial State', () => {
     it('should initialize with default state', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         autoFetch: false, // Disable auto-fetch to test initial state
       }))
 
@@ -86,7 +86,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should initialize with custom options', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         limit: 50,
         cacheExpiry: 10000,
         initialProperties: mockProperties,
@@ -100,7 +100,7 @@ describe('usePropertiesAdvanced Hook', () => {
 
   describe('Computed Values', () => {
     it('should calculate total pages correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
         autoFetch: false,
       }))
@@ -110,7 +110,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should determine pagination state correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
       }))
 
@@ -119,7 +119,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should check cache validity', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
       }))
 
@@ -129,7 +129,7 @@ describe('usePropertiesAdvanced Hook', () => {
 
   describe('Actions', () => {
     it('should set filters correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced())
+      const { result } = renderHook(() => useProperties())
 
       act(() => {
         result.current.setFilters({
@@ -155,7 +155,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should clear filters correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
       }))
 
@@ -180,7 +180,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should set page correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
         limit: 1,
       }))
@@ -193,7 +193,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should set items per page correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
       }))
 
@@ -205,7 +205,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should clear error correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced())
+      const { result } = renderHook(() => useProperties())
 
       // Manually set an error (this would normally come from a failed fetch)
       act(() => {
@@ -220,7 +220,7 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should reset state correctly', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         initialProperties: mockProperties,
         autoFetch: false,
       }))
@@ -242,7 +242,7 @@ describe('usePropertiesAdvanced Hook', () => {
 
   describe('Auto-fetch Behavior', () => {
     it('should not auto-fetch when autoFetch is false', () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         autoFetch: false,
       }))
 
@@ -251,18 +251,36 @@ describe('usePropertiesAdvanced Hook', () => {
     })
 
     it('should have fetchProperties function available for manual fetching', async () => {
-      const { result } = renderHook(() => usePropertiesAdvanced({
+      const { result } = renderHook(() => useProperties({
         autoFetch: false,
       }))
 
       // Should be able to manually fetch
       expect(typeof result.current.fetchProperties).toBe('function')
-      
+
       // Manual fetch should work
       await act(async () => {
         await result.current.fetchProperties()
       })
-      
+
+      expect(result.current.state.loading).toBe(false)
+    })
+
+    it('should auto-fetch when autoFetch is true', async () => {
+      const { result } = renderHook(() => useProperties({
+        autoFetch: true,
+      }))
+
+      // Wait for the auto-fetch to complete
+      await act(async () => {
+        // Wait for requestAnimationFrame and the async fetch to complete
+        await new Promise(resolve => {
+          requestAnimationFrame(() => {
+            setTimeout(resolve, 50)
+          })
+        })
+      })
+
       expect(result.current.state.loading).toBe(false)
     })
   })

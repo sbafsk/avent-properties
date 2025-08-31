@@ -2,8 +2,9 @@
  * Tests for PropertyCard Compound Components
  */
 
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { PropertyCard, type PropertyData } from '@/components/property-card-compound'
+import { FavoritesProvider } from '@/hooks/favorites-context'
 
 // Mock the useFavorites hook
 jest.mock('@/hooks/use-favorites', () => ({
@@ -28,6 +29,19 @@ const mockProperty: PropertyData = {
   property_type: 'Villa',
 }
 
+// Helper function to render with FavoritesProvider
+const renderWithProvider = async (component: React.ReactElement) => {
+  let result: any
+  await act(async () => {
+    result = render(
+      <FavoritesProvider>
+        {component}
+      </FavoritesProvider>
+    )
+  })
+  return result
+}
+
 describe('PropertyCard Compound Components', () => {
   const mockOnViewDetails = jest.fn()
   const mockOnScheduleTour = jest.fn()
@@ -37,8 +51,8 @@ describe('PropertyCard Compound Components', () => {
   })
 
   describe('Default Composition', () => {
-    it('renders all components in default layout', () => {
-      render(
+    it('renders all components in default layout', async () => {
+      await renderWithProvider(
         <PropertyCard
           property={mockProperty}
           onViewDetails={mockOnViewDetails}
@@ -69,8 +83,8 @@ describe('PropertyCard Compound Components', () => {
       expect(screen.getByText('Schedule Tour')).toBeInTheDocument()
     })
 
-    it('calls onViewDetails when view details button is clicked', () => {
-      render(
+    it('calls onViewDetails when view details button is clicked', async () => {
+      await renderWithProvider(
         <PropertyCard
           property={mockProperty}
           onViewDetails={mockOnViewDetails}
@@ -95,8 +109,8 @@ describe('PropertyCard Compound Components', () => {
       expect(mockOnViewDetails).toHaveBeenCalledWith('1')
     })
 
-    it('calls onScheduleTour when schedule tour button is clicked', () => {
-      render(
+    it('calls onScheduleTour when schedule tour button is clicked', async () => {
+      await renderWithProvider(
         <PropertyCard
           property={mockProperty}
           onViewDetails={mockOnViewDetails}
@@ -123,8 +137,8 @@ describe('PropertyCard Compound Components', () => {
   })
 
   describe('Custom Compositions', () => {
-    it('renders minimal card with only image and price', () => {
-      render(
+    it('renders minimal card with only image and price', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.ImageContainer>
             <PropertyCard.Image />
@@ -145,8 +159,8 @@ describe('PropertyCard Compound Components', () => {
       expect(screen.queryByText('View Details')).not.toBeInTheDocument()
     })
 
-    it('renders image only with custom overlay', () => {
-      render(
+    it('renders image only with custom overlay', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.ImageContainer>
             <PropertyCard.Image />
@@ -169,8 +183,8 @@ describe('PropertyCard Compound Components', () => {
   })
 
   describe('Individual Components', () => {
-    it('renders PropertyCard.Header correctly', () => {
-      render(
+    it('renders PropertyCard.Header correctly', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.Content>
             <PropertyCard.Header />
@@ -182,8 +196,8 @@ describe('PropertyCard Compound Components', () => {
       expect(screen.getByText('Punta del Este, La Barra')).toBeInTheDocument()
     })
 
-    it('renders PropertyCard.Specs correctly', () => {
-      render(
+    it('renders PropertyCard.Specs correctly', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.Content>
             <PropertyCard.Specs />
@@ -196,8 +210,8 @@ describe('PropertyCard Compound Components', () => {
       expect(screen.getByText('250m²')).toBeInTheDocument() // area
     })
 
-    it('renders PropertyCard.Price correctly', () => {
-      render(
+    it('renders PropertyCard.Price correctly', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.Content>
             <PropertyCard.Price />
@@ -208,8 +222,8 @@ describe('PropertyCard Compound Components', () => {
       expect(screen.getByText('$1,500,000')).toBeInTheDocument()
     })
 
-    it('renders PropertyCard.Badges correctly', () => {
-      render(
+    it('renders PropertyCard.Badges correctly', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.ImageContainer>
             <PropertyCard.Badges />
@@ -223,21 +237,21 @@ describe('PropertyCard Compound Components', () => {
   })
 
   describe('Context Usage', () => {
-    it('throws error when compound components are used outside PropertyCard', () => {
+    it('throws error when compound components are used outside PropertyCard', async () => {
       // Suppress console.error for this test
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
       
-      expect(() => {
-        render(<PropertyCard.Header />)
-      }).toThrow('PropertyCard compound components must be used within PropertyCard')
+      await expect(async () => {
+        await renderWithProvider(<PropertyCard.Header />)
+      }).rejects.toThrow('PropertyCard compound components must be used within PropertyCard')
       
       consoleSpy.mockRestore()
     })
   })
 
   describe('Accessibility', () => {
-    it('has proper aria-label for favorite button', () => {
-      render(
+    it('has proper aria-label for favorite button', async () => {
+      await renderWithProvider(
         <PropertyCard property={mockProperty}>
           <PropertyCard.ImageContainer>
             <PropertyCard.Favorite />

@@ -10,7 +10,7 @@ import { GlassCard } from "./glass-card"
 import { DatePicker } from "./date-picker"
 import { PaymentSummary } from "./payment-summary"
 import { ChevronLeft, ChevronRight, User, Calendar, CreditCard, CheckCircle } from "lucide-react"
-import { useProperties } from "@/lib/hooks"
+import { useProperties } from "@/hooks/use-properties"
 
 interface ReservationFormProps {
   propertyId?: string
@@ -42,8 +42,8 @@ interface FormData {
 }
 
 export function ReservationForm({ propertyTitle }: ReservationFormProps) {
-  // Fetch properties using Supabase GraphQL hooks
-  const { properties, isLoading: isLoadingProperties } = useProperties({
+  // Fetch properties using advanced hook with state reducer pattern
+  const { properties, loading: isLoadingProperties } = useProperties({
     status: 'AVAILABLE',
     limit: 50
   })

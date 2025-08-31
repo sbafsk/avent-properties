@@ -4,7 +4,7 @@ import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { GlassCard } from "./glass-card"
 import { SectionHeader } from "./section-header"
-import { InputField } from "./input-field"
+import { InputField, EmailInput, PhoneInput } from "./input-field"
 import { DatePicker } from "./date-picker"
 import { ChevronLeft, ChevronRight, Check, MapPin, Calendar, User, Settings, CheckCircle } from "lucide-react"
 
@@ -309,18 +309,16 @@ export function TourWizardControlProps({
                                 required
                             />
 
-                            <InputField
+                            <EmailInput
                                 label="Email"
-                                type="email"
                                 value={formData.email}
                                 onChange={(value) => updateFormData('email', value)}
                                 error={errors.email}
                                 required
                             />
 
-                            <InputField
+                            <PhoneInput
                                 label="Phone"
-                                type="tel"
                                 value={formData.phone}
                                 onChange={(value) => updateFormData('phone', value)}
                                 placeholder="+598 99 123 456"
