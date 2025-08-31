@@ -1,3 +1,13 @@
+/**
+ * Favorites Hook - Advanced React Patterns Implementation
+ * 
+ * This hook now uses the Context Module Functions pattern for better performance
+ * and maintainability. It provides the same API as before for backward compatibility.
+ * 
+ * @deprecated This hook is being migrated to use the advanced patterns.
+ * Consider using the new useFavorites hook from use-favorites-advanced.ts
+ */
+
 import { useState, useEffect, useCallback } from "react";
 
 const FAVORITES_KEY = "avent-properties-favorites";
