@@ -56,7 +56,7 @@ export interface Database {
 					area_m2: number | null
 					amenities: string[] | null
 					images: string[] | null
-					status: 'available' | 'reserved' | 'sold'
+					status: 'AVAILABLE' | 'RESERVED' | 'SOLD'
 					agency_id: string
 					created_at: string
 					updated_at: string
@@ -75,7 +75,7 @@ export interface Database {
 					area_m2?: number | null
 					amenities?: string[] | null
 					images?: string[] | null
-					status?: 'available' | 'reserved' | 'sold'
+					status?: 'AVAILABLE' | 'RESERVED' | 'SOLD'
 					agency_id: string
 					created_at?: string
 					updated_at?: string
@@ -94,7 +94,7 @@ export interface Database {
 					area_m2?: number | null
 					amenities?: string[] | null
 					images?: string[] | null
-					status?: 'available' | 'reserved' | 'sold'
+					status?: 'AVAILABLE' | 'RESERVED' | 'SOLD'
 					agency_id?: string
 					created_at?: string
 					updated_at?: string
