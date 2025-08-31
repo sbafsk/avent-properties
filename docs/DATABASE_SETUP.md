@@ -27,7 +27,7 @@
 
 ### **1. Environment Configuration**
 
-Create `.env.local` with your Supabase credentials:
+Create `.env` with your Supabase credentials:
 
 ```env
 # Supabase Configuration
