@@ -134,7 +134,7 @@ export function useInputField({
 
     // Prop Collections (pre-configured prop objects)
     const inputId = id || name || `input-${Math.random().toString(36).substr(2, 9)}`
-    
+
     const inputProps = useMemo(() => ({
         type: inputType,
         placeholder,
@@ -171,7 +171,7 @@ export function useInputField({
     }), [hasError, isValid])
 
     // Prop Getters (functions for composition)
-    const getInputProps = useCallback(({ className, onChange: customOnChange, onFocus: customOnFocus, onBlur: customOnBlur, ...props }: { className?: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; onFocus?: () => void; onBlur?: () => void; [key: string]: unknown } = {}) => ({
+    const getInputProps = useCallback(({ className, onChange: customOnChange, onFocus: customOnFocus, onBlur: customOnBlur, ...props }: { className?: string; onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; onFocus?: () => void; onBlur?: () => void;[key: string]: unknown } = {}) => ({
         ...inputProps,
         onChange: customOnChange ? callAll(handleChange, customOnChange) : handleChange,
         onFocus: customOnFocus ? callAll(handleFocus, customOnFocus) : handleFocus,
@@ -186,19 +186,19 @@ export function useInputField({
         ...props,
     }), [inputProps, hasError, isValid, isFocused, handleChange, handleFocus, handleBlur])
 
-    const getLabelProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
+    const getLabelProps = useCallback(({ className, ...props }: { className?: string;[key: string]: unknown } = {}) => ({
         ...labelProps,
         className: cn(labelProps.className, className),
         ...props,
     }), [labelProps])
 
-    const getContainerProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
+    const getContainerProps = useCallback(({ className, ...props }: { className?: string;[key: string]: unknown } = {}) => ({
         ...containerProps,
         className: cn(containerProps.className, className),
         ...props,
     }), [containerProps])
 
-    const getToggleButtonProps = useCallback(({ onClick, ...props }: { onClick?: () => void; [key: string]: unknown } = {}) => ({
+    const getToggleButtonProps = useCallback(({ onClick, ...props }: { onClick?: () => void;[key: string]: unknown } = {}) => ({
         type: 'button' as const,
         variant: 'ghost' as const,
         size: 'sm' as const,
@@ -208,7 +208,7 @@ export function useInputField({
         ...props,
     }), [togglePasswordVisibility, showPassword])
 
-    const getValidationIconProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
+    const getValidationIconProps = useCallback(({ className, ...props }: { className?: string;[key: string]: unknown } = {}) => ({
         className: cn(
             "absolute right-8 top-1/2 transform -translate-y-1/2 h-4 w-4",
             hasError && "text-red-500",
@@ -218,14 +218,14 @@ export function useInputField({
         ...props,
     }), [hasError, isValid])
 
-    const getErrorProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
+    const getErrorProps = useCallback(({ className, ...props }: { className?: string;[key: string]: unknown } = {}) => ({
         id: `${inputId}-error`,
         role: 'alert',
         className: cn("text-red-500 text-sm mt-1", className),
         ...props,
     }), [inputId])
 
-    const getSuccessProps = useCallback(({ className, ...props }: { className?: string; [key: string]: unknown } = {}) => ({
+    const getSuccessProps = useCallback(({ className, ...props }: { className?: string;[key: string]: unknown } = {}) => ({
         className: cn("text-green-600 text-sm mt-1", className),
         ...props,
     }), [])
