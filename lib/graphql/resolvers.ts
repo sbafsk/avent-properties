@@ -58,9 +58,15 @@ export const resolvers = {
 			return data
 		},
 
-		// Property queries
+		// Property queries - Optimized with joins to reduce N+1 queries
 		properties: async (_, { city, property_type, min_price, max_price, bedrooms, status, limit = 50, offset = 0 }) => {
-			let query = supabase.from('properties').select('*')
+			let query = supabase
+				.from('properties')
+				.select(`
+				*,
+				agency:agencies(*),
+				tour_reservations(*)
+			`)
 
 			if (city) query = query.eq('city', city)
 			if (property_type) query = query.eq('property_type', property_type)
@@ -79,7 +85,11 @@ export const resolvers = {
 		property: async (_, { id }) => {
 			const { data, error } = await supabase
 				.from('properties')
-				.select('*')
+				.select(`
+				*,
+				agency:agencies(*),
+				tour_reservations(*)
+			`)
 				.eq('id', id)
 				.single()
 
@@ -90,16 +100,25 @@ export const resolvers = {
 		propertiesByAgency: async (_, { agency_id }) => {
 			const { data, error } = await supabase
 				.from('properties')
-				.select('*')
+				.select(`
+				*,
+				agency:agencies(*),
+				tour_reservations(*)
+			`)
 				.eq('agency_id', agency_id)
 
 			if (error) throw new GraphQLError('Failed to fetch agency properties')
 			return data
 		},
 
-		// Agency queries
+		// Agency queries - Optimized with joins
 		agencies: async () => {
-			const { data, error } = await supabase.from('agencies').select('*')
+			const { data, error } = await supabase
+				.from('agencies')
+				.select(`
+				*,
+				properties(*)
+			`)
 			if (error) throw new GraphQLError('Failed to fetch agencies')
 			return data
 		},
@@ -107,7 +126,10 @@ export const resolvers = {
 		agency: async (_, { id }) => {
 			const { data, error } = await supabase
 				.from('agencies')
-				.select('*')
+				.select(`
+				*,
+				properties(*)
+			`)
 				.eq('id', id)
 				.single()
 
@@ -115,10 +137,16 @@ export const resolvers = {
 			return data
 		},
 
-		// Reservation queries
+		// Reservation queries - Optimized with joins
 		reservations: async (_, __, { token }) => {
 			await getAuthenticatedUser(token) // Check auth
-			const { data, error } = await supabase.from('tour_reservations').select('*')
+			const { data, error } = await supabase
+				.from('tour_reservations')
+				.select(`
+				*,
+				user:users(*),
+				property:properties(*)
+			`)
 			if (error) throw new GraphQLError('Failed to fetch reservations')
 			return data
 		},
@@ -127,7 +155,11 @@ export const resolvers = {
 			await getAuthenticatedUser(token) // Check auth
 			const { data, error } = await supabase
 				.from('tour_reservations')
-				.select('*')
+				.select(`
+				*,
+				user:users(*),
+				property:properties(*)
+			`)
 				.eq('id', id)
 				.single()
 
@@ -139,7 +171,11 @@ export const resolvers = {
 			await getAuthenticatedUser(token) // Check auth
 			const { data, error } = await supabase
 				.from('tour_reservations')
-				.select('*')
+				.select(`
+				*,
+				user:users(*),
+				property:properties(*)
+			`)
 				.eq('user_id', user_id)
 
 			if (error) throw new GraphQLError('Failed to fetch user reservations')
@@ -149,7 +185,11 @@ export const resolvers = {
 		propertyReservations: async (_, { property_id }) => {
 			const { data, error } = await supabase
 				.from('tour_reservations')
-				.select('*')
+				.select(`
+				*,
+				user:users(*),
+				property:properties(*)
+			`)
 				.eq('property_id', property_id)
 
 			if (error) throw new GraphQLError('Failed to fetch property reservations')
@@ -399,61 +439,23 @@ export const resolvers = {
 		},
 	},
 
-	// Field resolvers for relationships
+	// Field resolvers for relationships - Optimized to avoid N+1 queries
+	// These resolvers now just return the data that was already fetched in the main queries
 	Property: {
-		agency: async (parent) => {
-			const { data } = await supabase
-				.from('agencies')
-				.select('*')
-				.eq('id', parent.agency_id)
-				.single()
-			return data
-		},
-		reservations: async (parent) => {
-			const { data } = await supabase
-				.from('tour_reservations')
-				.select('*')
-				.eq('property_id', parent.id)
-			return data || []
-		},
+		agency: (parent) => parent.agency,
+		reservations: (parent) => parent.tour_reservations || [],
 	},
 
 	Agency: {
-		properties: async (parent) => {
-			const { data } = await supabase
-				.from('properties')
-				.select('*')
-				.eq('agency_id', parent.id)
-			return data || []
-		},
+		properties: (parent) => parent.properties || [],
 	},
 
 	User: {
-		reservations: async (parent) => {
-			const { data } = await supabase
-				.from('tour_reservations')
-				.select('*')
-				.eq('user_id', parent.id)
-			return data || []
-		},
+		reservations: (parent) => parent.reservations || [],
 	},
 
 	TourReservation: {
-		user: async (parent) => {
-			const { data } = await supabase
-				.from('users')
-				.select('*')
-				.eq('id', parent.user_id)
-				.single()
-			return data
-		},
-		property: async (parent) => {
-			const { data } = await supabase
-				.from('properties')
-				.select('*')
-				.eq('id', parent.property_id)
-				.single()
-			return data
-		},
+		user: (parent) => parent.user,
+		property: (parent) => parent.property,
 	},
 }

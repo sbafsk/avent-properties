@@ -34,6 +34,43 @@ export const client = new ApolloClient({
 							return incoming
 						},
 					},
+					agencies: {
+						merge(_, incoming) {
+							return incoming
+						},
+					},
+					users: {
+						merge(_, incoming) {
+							return incoming
+						},
+					},
+				},
+			},
+			Property: {
+				fields: {
+					agency: {
+						merge: true,
+					},
+					reservations: {
+						merge: false,
+					},
+				},
+			},
+			Agency: {
+				fields: {
+					properties: {
+						merge: false,
+					},
+				},
+			},
+			TourReservation: {
+				fields: {
+					user: {
+						merge: true,
+					},
+					property: {
+						merge: true,
+					},
 				},
 			},
 		},
@@ -41,9 +78,11 @@ export const client = new ApolloClient({
 	defaultOptions: {
 		watchQuery: {
 			errorPolicy: 'all',
+			fetchPolicy: 'cache-and-network',
 		},
 		query: {
 			errorPolicy: 'all',
+			fetchPolicy: 'cache-first',
 		},
 	},
 })
