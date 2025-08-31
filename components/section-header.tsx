@@ -1,18 +1,44 @@
-import { cn } from "@/lib/utils"
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface SectionHeaderProps {
-  title: string
-  subtitle?: string
-  className?: string
-  centered?: boolean
+  title: string;
+  subtitle?: string;
+  centered?: boolean;
+  className?: string;
+  titleClassName?: string;
+  subtitleClassName?: string;
 }
 
-export function SectionHeader({ title, subtitle, className, centered = false }: SectionHeaderProps) {
+export function SectionHeader({
+  title,
+  subtitle,
+  centered = false,
+  className,
+  titleClassName,
+  subtitleClassName,
+}: SectionHeaderProps) {
   return (
-    <div className={cn("space-y-2", centered && "text-center", className)}>
-      <h2 className="heading-luxury text-3xl md:text-4xl lg:text-5xl text-foreground">{title}</h2>
-      <div className={cn("h-1 w-20 bg-gold rounded-full", centered && "mx-auto")} />
-      {subtitle && <p className="text-luxury text-lg text-muted-foreground max-w-2xl">{subtitle}</p>}
+    <div className={cn("space-y-4", centered && "text-center", className)}>
+      <h2
+        className={cn(
+          "heading-luxury text-3xl md:text-4xl lg:text-5xl text-foreground",
+          titleClassName
+        )}
+      >
+        {title}
+      </h2>
+      {subtitle && (
+        <p
+          className={cn(
+            "text-luxury text-lg md:text-xl text-muted-foreground max-w-3xl",
+            centered && "mx-auto",
+            subtitleClassName
+          )}
+        >
+          {subtitle}
+        </p>
+      )}
     </div>
-  )
+  );
 }
