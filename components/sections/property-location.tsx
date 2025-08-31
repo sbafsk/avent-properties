@@ -28,3 +28,5 @@ export function PropertyLocation({ city, neighborhood, className }: PropertyLoca
     </GlassCard>
   );
 }
+
+

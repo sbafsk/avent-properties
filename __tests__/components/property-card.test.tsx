@@ -111,3 +111,5 @@ describe("PropertyCard", () => {
     expect(card).toBeInTheDocument();
   });
 });
+
+

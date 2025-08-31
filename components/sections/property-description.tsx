@@ -18,3 +18,5 @@ export function PropertyDescription({ description, className }: PropertyDescript
     </GlassCard>
   );
 }
+
+

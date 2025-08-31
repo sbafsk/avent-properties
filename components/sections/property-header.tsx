@@ -39,3 +39,5 @@ export function PropertyHeader({ property, onShare, className }: PropertyHeaderP
     </div>
   );
 }
+
+

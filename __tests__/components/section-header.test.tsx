@@ -71,3 +71,5 @@ describe("SectionHeader", () => {
     expect(subtitle).toHaveClass("custom-subtitle-class");
   });
 });
+
+
