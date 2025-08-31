@@ -11,7 +11,6 @@ interface ListingsResultsProps {
   filtering?: boolean;
   error?: string | null;
   onViewDetails?: (id: string) => void;
-  onScheduleTour?: (id: string) => void;
   className?: string;
 }
 
@@ -22,7 +21,6 @@ export function ListingsResults({
   filtering = false,
   error = null,
   onViewDetails,
-  onScheduleTour,
   className,
 }: ListingsResultsProps) {
   return (
@@ -60,7 +58,6 @@ export function ListingsResults({
               loading={loading}
               error={error}
               onViewDetails={onViewDetails}
-              onScheduleTour={onScheduleTour}
             />
           </motion.div>
         )}

@@ -36,7 +36,6 @@ interface PropertyCardContextValue {
   isFavorite: boolean
   toggleFavorite: () => void
   onViewDetails?: (id: string) => void
-  onScheduleTour?: (id: string) => void
 }
 
 // Context
@@ -56,16 +55,14 @@ interface PropertyCardProps {
   property: PropertyData
   className?: string
   onViewDetails?: (id: string) => void
-  onScheduleTour?: (id: string) => void
   children: React.ReactNode
 }
 
-function PropertyCardRoot({ 
-  property, 
-  className, 
-  onViewDetails, 
-  onScheduleTour, 
-  children 
+function PropertyCardRoot({
+  property,
+  className,
+  onViewDetails,
+  children
 }: PropertyCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites()
   const isFav = isFavorite(property.id)
@@ -79,7 +76,6 @@ function PropertyCardRoot({
     isFavorite: isFav,
     toggleFavorite: handleToggleFavorite,
     onViewDetails,
-    onScheduleTour,
   }
 
   return (
@@ -105,7 +101,7 @@ interface PropertyCardImageProps {
 
 function PropertyCardImage({ className }: PropertyCardImageProps) {
   const { property } = usePropertyCardContext()
-  
+
   return (
     <div className={cn('relative aspect-video mb-4 rounded-lg overflow-hidden', className)}>
       <Image
@@ -126,7 +122,7 @@ interface PropertyCardBadgesProps {
 
 function PropertyCardBadges({ className }: PropertyCardBadgesProps) {
   const { property } = usePropertyCardContext()
-  
+
   return (
     <div className={cn('absolute top-3 left-3 right-3 flex justify-between items-start', className)}>
       {/* Featured badge */}
@@ -138,7 +134,7 @@ function PropertyCardBadges({ className }: PropertyCardBadgesProps) {
           Featured
         </Badge>
       )}
-      
+
       {/* Property type badge */}
       <Badge
         variant="outline"
@@ -157,7 +153,7 @@ interface PropertyCardFavoriteProps {
 
 function PropertyCardFavorite({ className }: PropertyCardFavoriteProps) {
   const { isFavorite, toggleFavorite } = usePropertyCardContext()
-  
+
   return (
     <button
       onClick={toggleFavorite}
@@ -184,7 +180,7 @@ interface PropertyCardHeaderProps {
 
 function PropertyCardHeader({ className }: PropertyCardHeaderProps) {
   const { property } = usePropertyCardContext()
-  
+
   return (
     <div className={cn('space-y-2', className)}>
       <h3 className="heading-luxury text-xl text-foreground mb-2 line-clamp-2">
@@ -207,7 +203,7 @@ interface PropertyCardSpecsProps {
 
 function PropertyCardSpecs({ className }: PropertyCardSpecsProps) {
   const { property } = usePropertyCardContext()
-  
+
   return (
     <div className={cn('flex items-center gap-4 text-sm text-muted-foreground', className)}>
       {property.bedrooms && (
@@ -239,7 +235,7 @@ interface PropertyCardPriceProps {
 
 function PropertyCardPrice({ className }: PropertyCardPriceProps) {
   const { property } = usePropertyCardContext()
-  
+
   return (
     <div className={cn('flex items-center justify-between', className)}>
       <div>
@@ -257,20 +253,15 @@ interface PropertyCardActionsProps {
 }
 
 function PropertyCardActions({ className }: PropertyCardActionsProps) {
-  const { property, onViewDetails, onScheduleTour } = usePropertyCardContext()
-  
+  const { property, onViewDetails } = usePropertyCardContext()
+
   const handleViewDetails = () => {
     if (onViewDetails) {
       onViewDetails(property.id)
     }
   }
 
-  const handleScheduleTour = () => {
-    if (onScheduleTour) {
-      onScheduleTour(property.id)
-    }
-  }
-  
+
   return (
     <div className={cn('flex gap-2', className)}>
       <Button
@@ -280,14 +271,6 @@ function PropertyCardActions({ className }: PropertyCardActionsProps) {
         onClick={handleViewDetails}
       >
         View Details
-      </Button>
-      <Button
-        variant="premium"
-        size="sm"
-        className="flex-1"
-        onClick={handleScheduleTour}
-      >
-        Schedule Tour
       </Button>
     </div>
   )

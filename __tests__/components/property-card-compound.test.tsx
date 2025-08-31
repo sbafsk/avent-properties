@@ -44,7 +44,6 @@ const renderWithProvider = async (component: React.ReactElement) => {
 
 describe('PropertyCard Compound Components', () => {
   const mockOnViewDetails = jest.fn()
-  const mockOnScheduleTour = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -56,14 +55,13 @@ describe('PropertyCard Compound Components', () => {
         <PropertyCard
           property={mockProperty}
           onViewDetails={mockOnViewDetails}
-          onScheduleTour={mockOnScheduleTour}
         >
           <PropertyCard.ImageContainer>
             <PropertyCard.Image />
             <PropertyCard.Badges />
             <PropertyCard.Favorite />
           </PropertyCard.ImageContainer>
-          
+
           <PropertyCard.Content>
             <PropertyCard.Header />
             <PropertyCard.Specs />
@@ -88,14 +86,13 @@ describe('PropertyCard Compound Components', () => {
         <PropertyCard
           property={mockProperty}
           onViewDetails={mockOnViewDetails}
-          onScheduleTour={mockOnScheduleTour}
         >
           <PropertyCard.ImageContainer>
             <PropertyCard.Image />
             <PropertyCard.Badges />
             <PropertyCard.Favorite />
           </PropertyCard.ImageContainer>
-          
+
           <PropertyCard.Content>
             <PropertyCard.Header />
             <PropertyCard.Specs />
@@ -120,7 +117,7 @@ describe('PropertyCard Compound Components', () => {
             <PropertyCard.Image />
             <PropertyCard.Favorite />
           </PropertyCard.ImageContainer>
-          
+
           <PropertyCard.Content>
             <PropertyCard.Price />
           </PropertyCard.Content>
@@ -129,7 +126,7 @@ describe('PropertyCard Compound Components', () => {
 
       // Should have price
       expect(screen.getByText('$1,500,000')).toBeInTheDocument()
-      
+
       // Should not have other elements
       expect(screen.queryByText('Luxury Beach House')).not.toBeInTheDocument()
       expect(screen.queryByText('View Details')).not.toBeInTheDocument()
@@ -152,7 +149,7 @@ describe('PropertyCard Compound Components', () => {
 
       // Should have custom overlay
       expect(screen.getByText('Custom Title')).toBeInTheDocument()
-      
+
       // Should not have default content
       expect(screen.queryByText('Luxury Beach House')).not.toBeInTheDocument()
     })
@@ -215,12 +212,12 @@ describe('PropertyCard Compound Components', () => {
   describe('Context Usage', () => {
     it('throws error when compound components are used outside PropertyCard', async () => {
       // Suppress console.error for this test
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-      
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+
       await expect(async () => {
         await renderWithProvider(<PropertyCard.Header />)
       }).rejects.toThrow('PropertyCard compound components must be used within PropertyCard')
-      
+
       consoleSpy.mockRestore()
     })
   })

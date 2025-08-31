@@ -23,9 +23,9 @@ interface ListingsWithFiltersProps {
 
 export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersProps) {
   const router = useRouter();
-  
+
   // Use advanced properties hook with state reducer pattern
-  const { 
+  const {
     state: { properties, loading, error }
   } = useProperties({
     limit: 100
@@ -35,7 +35,7 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
   const allProperties = useMemo(() => {
     return properties && properties.length > 0 ? properties : (initialProperties || []);
   }, [properties, initialProperties]);
-  
+
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
@@ -67,20 +67,20 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
       }
 
       // Bedrooms filter
-      if (filters.bedrooms.length > 0 && property.bedrooms && 
-          !filters.bedrooms.some(min => (property.bedrooms || 0) >= min)) {
+      if (filters.bedrooms.length > 0 && property.bedrooms &&
+        !filters.bedrooms.some(min => (property.bedrooms || 0) >= min)) {
         return false
       }
 
       // Bathrooms filter
-      if (filters.bathrooms.length > 0 && property.bathrooms && 
-          !filters.bathrooms.some(min => (property.bathrooms || 0) >= min)) {
+      if (filters.bathrooms.length > 0 && property.bathrooms &&
+        !filters.bathrooms.some(min => (property.bathrooms || 0) >= min)) {
         return false
       }
 
       // Amenities filter
       if (filters.amenities.length > 0 && property.amenities) {
-        const hasRequiredAmenity = filters.amenities.some(amenity => 
+        const hasRequiredAmenity = filters.amenities.some(amenity =>
           property.amenities!.includes(amenity)
         )
         if (!hasRequiredAmenity) {
@@ -94,7 +94,7 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
 
   const handleFilterChange = (filters: FilterState) => {
     setIsFiltering(true);
-    
+
     // Simulate filtering delay for better UX
     setTimeout(() => {
       const filtered = applyFilters(allProperties, filters);
@@ -105,10 +105,6 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
 
   const handleViewDetails = (id: string) => {
     router.push(`/property/${id}`);
-  };
-
-  const handleScheduleTour = (id: string) => {
-    router.push(`/tour-wizard?property=${id}`);
   };
 
   // Only show loading if we don't have initial properties and are still loading
@@ -144,7 +140,6 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
         filtering={isFiltering}
         error={error}
         onViewDetails={handleViewDetails}
-        onScheduleTour={handleScheduleTour}
       />
     </div>
   );

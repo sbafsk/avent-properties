@@ -12,7 +12,6 @@ interface PropertyGridProps {
   loading?: boolean;
   error?: string | null;
   onViewDetails?: (id: string) => void;
-  onScheduleTour?: (id: string) => void;
   className?: string;
 }
 
@@ -21,7 +20,6 @@ export function PropertyGrid({
   loading = false,
   error = null,
   onViewDetails,
-  onScheduleTour,
   className,
 }: PropertyGridProps) {
   // Loading state
@@ -111,7 +109,6 @@ export function PropertyGrid({
                 property_type={property.property_type}
                 featured={index < 2} // First 2 properties are featured
                 onViewDetails={onViewDetails}
-                onScheduleTour={onScheduleTour}
               />
             </motion.div>
           ))}

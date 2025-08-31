@@ -16,7 +16,6 @@ interface PropertyCardProps {
   property_type: string;
   className?: string;
   onViewDetails?: (id: string) => void;
-  onScheduleTour?: (id: string) => void;
 }
 
 /**
@@ -42,7 +41,6 @@ export function PropertyCard({
   property_type,
   className,
   onViewDetails,
-  onScheduleTour,
 }: PropertyCardProps) {
   // Convert props to PropertyData format
   const property: PropertyData = {
@@ -65,7 +63,6 @@ export function PropertyCard({
       property={property}
       className={className}
       onViewDetails={onViewDetails}
-      onScheduleTour={onScheduleTour}
     >
       <PropertyCardCompound.ImageContainer>
         <PropertyCardCompound.Image />
