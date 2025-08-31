@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GlassCard } from '@/components/glass-card'
@@ -11,24 +11,8 @@ import { PropertySkeleton } from '@/components/ui/property-skeleton'
 import { SectionLoading } from '@/components/ui/page-loading'
 import { MapPin, Filter } from 'lucide-react'
 import { PropertyImage } from '@/components/ui/optimized-image'
-
-interface Property {
-  id: string
-  title: string
-  description: string
-  price: number
-  city: string
-  neighborhood: string
-  property_type: string
-  bedrooms: number
-  bathrooms: number
-  area_m2: number
-  images: string[]
-  amenities: string[]
-  status: string
-  created_at: string
-  updated_at: string
-}
+import { useProperties } from '@/lib/hooks'
+import type { Property } from '@/lib/hooks'
 
 interface FilterState {
   priceRange: [number, number]
@@ -40,24 +24,37 @@ interface FilterState {
 }
 
 interface ListingsWithFiltersProps {
-  initialProperties: Property[]
+  initialProperties?: Property[]
 }
 
 export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersProps) {
-  const [properties] = useState<Property[]>(initialProperties)
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>(initialProperties)
+  // Use Supabase GraphQL hooks for data fetching
+  const { 
+    properties, 
+    isLoading, 
+    isError, 
+    error,
+    refetch 
+  } = useProperties({
+    status: 'AVAILABLE',
+    limit: 100
+  })
+
+  // Use initial properties if provided (server-side), otherwise use fetched properties
+  const allProperties = useMemo(() => {
+    return properties && properties.length > 0 ? properties : (initialProperties || [])
+  }, [properties, initialProperties])
+  
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
   const [isFiltering, setIsFiltering] = useState(false)
 
-  // Simulate loading time for better UX
+  // Update filtered properties when properties data changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 800)
-
-    return () => clearTimeout(timer)
-  }, [])
+    if (allProperties && allProperties.length > 0) {
+      setFilteredProperties(allProperties)
+    }
+  }, [allProperties])
 
   // Apply filters to properties
   const applyFilters = (properties: Property[], filters: FilterState) => {
@@ -80,13 +77,13 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
 
       // Bedrooms filter
       if (filters.bedrooms.length > 0 && property.bedrooms && 
-          !filters.bedrooms.some(min => property.bedrooms >= min)) {
+          !filters.bedrooms.some(min => (property.bedrooms || 0) >= min)) {
         return false
       }
 
       // Bathrooms filter
       if (filters.bathrooms.length > 0 && property.bathrooms && 
-          !filters.bathrooms.some(min => property.bathrooms >= min)) {
+          !filters.bathrooms.some(min => (property.bathrooms || 0) >= min)) {
         return false
       }
 
@@ -109,15 +106,31 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
     
     // Simulate filtering delay for better UX
     setTimeout(() => {
-      const filtered = applyFilters(properties, filters)
+      const filtered = applyFilters(allProperties, filters)
       setFilteredProperties(filtered)
       setIsFiltering(false)
     }, 300)
   }
 
-  // Search functionality is handled by the PropertyFilterSidebar component
+  // Handle error state
+  if (isError) {
+    return (
+      <div className="text-center py-16">
+        <div className="max-w-md mx-auto">
+          <h3 className="heading-luxury text-xl text-foreground mb-2">Error Loading Properties</h3>
+          <p className="text-luxury text-muted-foreground mb-4">
+            {error?.message || 'Failed to load properties'}
+          </p>
+          <Button onClick={() => refetch()} className="bg-gold text-gold-foreground hover:bg-gold/90">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
-  if (isLoading) {
+  // Only show loading if we don't have initial properties and are still loading
+  if (isLoading && !initialProperties) {
     return (
       <div className="flex gap-8">
         <PropertyFilterSidebar
@@ -158,7 +171,7 @@ export function ListingsWithFilters({ initialProperties }: ListingsWithFiltersPr
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-luxury text-muted-foreground">
-            Showing {filteredProperties.length} of {properties.length} properties
+            Showing {filteredProperties.length} of {allProperties.length} properties
           </p>
         </div>
 

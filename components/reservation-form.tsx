@@ -10,6 +10,7 @@ import { GlassCard } from "./glass-card"
 import { DatePicker } from "./date-picker"
 import { PaymentSummary } from "./payment-summary"
 import { ChevronLeft, ChevronRight, User, Calendar, CreditCard, CheckCircle } from "lucide-react"
+import { useProperties } from "@/lib/hooks"
 
 interface ReservationFormProps {
   propertyId?: string
@@ -41,6 +42,12 @@ interface FormData {
 }
 
 export function ReservationForm({ propertyTitle }: ReservationFormProps) {
+  // Fetch properties using Supabase GraphQL hooks
+  const { properties, isLoading: isLoadingProperties } = useProperties({
+    status: 'AVAILABLE',
+    limit: 50
+  })
+
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
     selectedProperty: propertyTitle || "",
@@ -67,14 +74,8 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
     { number: 5, title: "Confirmation", icon: CheckCircle },
   ]
 
-  // In a real app, this would fetch properties from the API
-  const availableProperties = [
-    "Oceanfront Villa Punta del Este",
-    "Modern Penthouse La Barra", 
-    "Beachfront Estate José Ignacio",
-    "Contemporary Apartment Piriápolis",
-    "Luxury Beach House Manantiales",
-  ]
+  // Use real property data from Supabase
+  const availableProperties = properties?.map(property => property.title) || []
 
   const updateFormData = (field: keyof FormData, value: string | number | Date | undefined) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -125,21 +126,27 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
             <h2 className="heading-luxury text-2xl text-foreground mb-6">Select Property</h2>
             <div className="space-y-4">
               <Label className="text-foreground">Choose the property you&apos;d like to tour</Label>
-              <Select
-                value={formData.selectedProperty}
-                onValueChange={(value) => updateFormData("selectedProperty", value)}
-              >
-                <SelectTrigger className="glass border-white/20">
-                  <SelectValue placeholder="Select a property" />
-                </SelectTrigger>
-                <SelectContent className="glass border-white/20">
-                  {availableProperties.map((property) => (
-                    <SelectItem key={property} value={property}>
-                      {property}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {isLoadingProperties ? (
+                <div className="text-center py-8">
+                  <p className="text-luxury text-muted-foreground">Loading properties...</p>
+                </div>
+              ) : (
+                <Select
+                  value={formData.selectedProperty}
+                  onValueChange={(value) => updateFormData("selectedProperty", value)}
+                >
+                  <SelectTrigger className="glass border-white/20">
+                    <SelectValue placeholder="Select a property" />
+                  </SelectTrigger>
+                  <SelectContent className="glass border-white/20">
+                    {availableProperties.map((property) => (
+                      <SelectItem key={property} value={property}>
+                        {property}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </GlassCard>
         )

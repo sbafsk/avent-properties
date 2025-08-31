@@ -1,6 +1,25 @@
+'use client'
+
+import dynamic from 'next/dynamic'
 import { MainLayout } from "@/components/main-layout"
-import { ReservationForm } from "@/components/reservation-form"
 import { SectionHeader } from "@/components/section-header"
+
+// Dynamically import the reservation form with SSR disabled
+const ReservationForm = dynamic(
+  () => import('@/components/reservation-form').then(mod => ({ default: mod.ReservationForm })),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 animate-pulse">
+          <div className="h-8 bg-white/20 rounded mb-6"></div>
+          <div className="h-4 bg-white/20 rounded mb-4"></div>
+          <div className="h-4 bg-white/20 rounded w-3/4"></div>
+        </div>
+      </div>
+    )
+  }
+)
 
 export default function ReservePage() {
   return (

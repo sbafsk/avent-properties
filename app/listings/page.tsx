@@ -1,28 +1,29 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import dynamic from 'next/dynamic'
 import { MainLayout } from '@/components/main-layout'
-import { ListingsWithFilters } from '@/components/listings-with-filters'
 
-// Fetch properties from Supabase
-async function getProperties() {
-  const supabase = await createClient()
-  
-  const { data: properties, error } = await supabase
-    .from('properties')
-    .select('*')
-    .eq('status', 'AVAILABLE')
-    .order('created_at', { ascending: false })
-  
-  if (error) {
-    console.error('Error fetching properties:', error)
-    return []
+// Dynamically import the component with SSR disabled to avoid build issues
+const ListingsWithFilters = dynamic(
+  () => import('@/components/listings-with-filters').then(mod => ({ default: mod.ListingsWithFilters })),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex gap-8">
+        <div className="w-64 h-96 bg-white/10 backdrop-blur-sm rounded-lg animate-pulse" />
+        <div className="flex-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white/10 backdrop-blur-sm rounded-lg h-96 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
-  
-  return properties || []
-}
+)
 
-export default async function ListingsPage() {
-  const properties = await getProperties()
-  
+export default function ListingsPage() {
   return (
     <MainLayout>
       <div className="pt-24 px-4">
@@ -37,8 +38,8 @@ export default async function ListingsPage() {
             </p>
           </div>
           
-          {/* Listings with Filters */}
-          <ListingsWithFilters initialProperties={properties} />
+          {/* Listings with Filters - Now uses Supabase GraphQL hooks */}
+          <ListingsWithFilters />
         </div>
       </div>
     </MainLayout>
