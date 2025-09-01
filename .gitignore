@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# AI training materials (not for version control)
+/rules
+
+# Documentation (keep in version control)
+# /docs - Removed to allow documentation commits

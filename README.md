@@ -10,17 +10,32 @@ Avent Properties is a modern, luxury real estate platform targeting High Net Wor
 - **Property Listings**: Browse and filter luxury properties with advanced search
 - **Tour Reservations**: Book premium tours with 10% deposit system
 - **Multi-Role Access**: Client, Agency, and Admin dashboards
-- **GraphQL API**: Type-safe API with Supabase backend
+- **GraphQL API**: Hybrid architecture with Supabase backend
 - **Modern UI**: Glassmorphism design with gold accents
 - **Responsive Design**: Mobile-first approach
+
+---
+
+## 📚 **Documentation & Getting Started**
+
+**🎯 For complete project documentation, start with `docs/README.md`**
+
+This root README provides quick setup instructions. For comprehensive documentation including:
+- Current project status and progress
+- Development standards and guidelines
+- Business requirements and roadmap
+- MCP integration setup
+- Technical implementation details
+
+**→ Go to `docs/README.md` for the complete picture**
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: Next.js 15 (App Router) + TypeScript + React 19
 - **Styling**: TailwindCSS + shadcn/ui + Radix UI
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
-- **API**: GraphQL with Apollo Server
-- **State Management**: Redux Toolkit
+- **API**: Hybrid GraphQL (Supabase auto-generated + Custom Apollo Server)
+- **State Management**: Redux Toolkit + React Query
 - **Forms**: React Hook Form + Zod validation
 - **Testing**: Jest + React Testing Library + Playwright
 - **Package Manager**: Yarn
@@ -59,7 +74,7 @@ NEXT_PUBLIC_APP_NAME=Avent Properties
 
 ### 3. Database Setup
 1. Create a new Supabase project
-2. Run the database migrations (see `rules/DATABASE_SETUP.md`)
+2. Run the database migrations (see `docs/DATABASE_SETUP.md`)
 3. Set up Row Level Security (RLS) policies
 4. Configure authentication settings
 
@@ -98,12 +113,14 @@ avent-properties/
 │   └── ...               # Feature components
 ├── lib/                   # Utilities and configurations
 │   ├── graphql/          # GraphQL schema and resolvers
+│   ├── hooks/            # Custom React hooks
 │   ├── slices/           # Redux slices
 │   ├── supabase.ts       # Supabase client
 │   ├── apollo-client.ts  # Apollo Client config
 │   └── store.ts          # Redux store
-├── rules/                 # Project documentation
-├── tests/                 # Test files
+├── rules/                 # AI learning materials and development standards
+├── docs/                  # Project status and implementation tracking
+├── __tests__/            # Test files
 └── public/               # Static assets
 ```
 
@@ -187,20 +204,39 @@ yarn type-check       # TypeScript type checking
 - API: AWS AppSync or Lambda
 - Frontend: Amplify or CloudFront
 
-## 📚 Documentation
+## 📚 Documentation Structure
 
-- `rules/DEVELOPMENT_BLUEPRINT.md` - Business logic and requirements
-- `rules/DEVELOPMENT_WORKFLOW.md` - Development process
-- `rules/RULES.md` - Coding standards and conventions
-- `rules/DOCUMENTATION_INDEX.md` - Documentation overview
+**🎯 Complete documentation is organized in the `/docs` folder**
+
+### **Quick Navigation**
+- **`docs/README.md`** - **COMPLETE PROJECT OVERVIEW** (Start here!)
+- **`docs/IMPLEMENTATION_TRACKER.md`** - Current project status and progress
+- **`docs/FOLDER_STRUCTURE.md`** - Quick navigation guide
+- **`docs/MAINTENANCE_GUIDE.md`** - How to keep docs aligned
+
+### **For AI Assistants & Developers**
+- **`rules/`** - Development standards and AI training materials
+- **`docs/`** - Project status and implementation guides
+
+**→ See `docs/README.md` for complete documentation structure and navigation**
+
+## 🤖 AI Development Assistance
+
+### **MCP Integration**
+We use Model Context Protocol (MCP) to enhance AI development assistance with 2-server setup (docs + rules).
+
+**→ See `docs/README.md` for complete MCP setup and testing instructions**
 
 ## 🤝 Contributing
 
-1. Follow the coding standards in `rules/RULES.md`
-2. Write tests for new features
-3. Use conventional commit messages
-4. Create feature branches from `dev`
-5. Submit pull requests for review
+1. **Follow coding standards** in `rules/RULES.md`
+2. **Write tests** for new features
+3. **Use conventional commit messages**
+4. **Create feature branches** from `dev`
+5. **Submit pull requests** for review
+6. **Update documentation** when making changes
+
+**→ See `docs/MAINTENANCE_GUIDE.md` for documentation update workflow**
 
 ## 📄 License
 
@@ -209,3 +245,29 @@ Private project - All rights reserved
 ---
 
 **Built with ❤️ by Trees in Uruguay**
+
+---
+
+## 🔄 Documentation Status
+
+- **Last Updated**: January 2025
+- **Documentation**: ✅ **CONSOLIDATED** - Single source of truth in `docs/README.md`
+- **MCP Integration**: ✅ **COMPLETED** - AI development assistance operational
+- **Next Review**: Monthly or when major changes occur
+
+**📚 For complete documentation, start with `docs/README.md`**
+
+---
+
+## 🎯 **Quick Start**
+
+1. **Read this file** for project overview and setup
+2. **Go to `docs/README.md`** for complete documentation
+3. **Check `docs/IMPLEMENTATION_TRACKER.md`** for current status
+4. **Follow `docs/MAINTENANCE_GUIDE.md`** for keeping docs updated
+
+---
+
+## 🚀 **Recent Achievement**
+
+**MCP Integration Complete!** ✅ AI development assistance is now operational, providing enhanced context and better code generation for the Avent Properties project.
