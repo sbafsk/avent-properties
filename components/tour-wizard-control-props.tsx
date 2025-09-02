@@ -6,19 +6,21 @@ import { GlassCard } from "./glass-card"
 import { SectionHeader } from "./section-header"
 import { InputField, EmailInput, PhoneInput } from "./input-field"
 import { DatePicker } from "./date-picker"
+import { MultiSelect } from "./ui/multi-select"
+import { PROPERTY_TYPE_OPTIONS, LOCATION_OPTIONS, TOUR_TYPE_OPTIONS } from "./tour-wizard-constants"
 import { ChevronLeft, ChevronRight, Check, MapPin, Calendar, User, Settings, CheckCircle } from "lucide-react"
 
 // Types
 export interface TourWizardData {
-    propertyType: string
-    location: string
+    propertyType: string[]
+    location: string[]
     tourDate: Date | null
     tourTime: string
     tourType: string
     firstName: string
     lastName: string
-    email: string
     phone: string
+    email: string
     nationality: string
     specialRequests: string
     budget: string
@@ -53,8 +55,8 @@ export interface TourWizardControlProps {
 }
 
 const initialData: TourWizardData = {
-    propertyType: "",
-    location: "",
+    propertyType: [],
+    location: [],
     tourDate: null,
     tourTime: "",
     tourType: "",
@@ -112,7 +114,7 @@ export function TourWizardControlProps({
     }, [isStepControlled, isDataControlled, isSubmittingControlled, isErrorsControlled])
 
     // Update form data
-    const updateFormData = useCallback((field: keyof TourWizardData, value: string | Date | null) => {
+    const updateFormData = useCallback((field: keyof TourWizardData, value: string | string[] | Date | null) => {
         const newData = { ...formData, [field]: value }
 
         if (isDataControlled) {
@@ -185,8 +187,8 @@ export function TourWizardControlProps({
 
         switch (step) {
             case 1:
-                if (!formData.propertyType) newErrors.propertyType = "Property type is required"
-                if (!formData.location) newErrors.location = "Location is required"
+                if (!formData.propertyType.length) newErrors.propertyType = "Property type is required"
+                if (!formData.location.length) newErrors.location = "Location is required"
                 break
             case 2:
                 if (!formData.tourDate) newErrors.tourDate = "Tour date is required"
@@ -220,23 +222,39 @@ export function TourWizardControlProps({
                         </div>
 
                         <div className="space-y-4">
-                            <InputField
-                                label="Property Type"
-                                value={formData.propertyType}
-                                onChange={(value) => updateFormData('propertyType', value)}
-                                placeholder="e.g., Apartment, House, Villa"
-                                error={errors.propertyType}
-                                required
-                            />
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Property Type <span className="text-red-500">*</span>
+                                </label>
+                                <MultiSelect
+                                    options={PROPERTY_TYPE_OPTIONS}
+                                    selected={formData.propertyType}
+                                    onChange={(selected) => updateFormData('propertyType', selected)}
+                                    placeholder="Select property types..."
+                                    searchPlaceholder="Search property types..."
+                                    emptyText="No property types found."
+                                />
+                                {errors.propertyType && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.propertyType}</p>
+                                )}
+                            </div>
 
-                            <InputField
-                                label="Preferred Location"
-                                value={formData.location}
-                                onChange={(value) => updateFormData('location', value)}
-                                placeholder="e.g., Punta del Este, La Barra"
-                                error={errors.location}
-                                required
-                            />
+                            <div>
+                                <label className="block text-sm font-medium mb-2">
+                                    Preferred Location <span className="text-red-500">*</span>
+                                </label>
+                                <MultiSelect
+                                    options={LOCATION_OPTIONS}
+                                    selected={formData.location}
+                                    onChange={(selected) => updateFormData('location', selected)}
+                                    placeholder="Select locations..."
+                                    searchPlaceholder="Search locations..."
+                                    emptyText="No locations found."
+                                />
+                                {errors.location && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )
@@ -274,9 +292,11 @@ export function TourWizardControlProps({
                                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 >
                                     <option value="">Select tour type</option>
-                                    <option value="virtual">Virtual Tour</option>
-                                    <option value="in-person">In-Person Tour</option>
-                                    <option value="both">Both Options</option>
+                                    {TOUR_TYPE_OPTIONS.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -384,19 +404,26 @@ export function TourWizardControlProps({
                             <p className="text-gray-600">Please review your information</p>
                         </div>
 
-                        <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                            <p><strong>Property Type:</strong> {formData.propertyType}</p>
-                            <p><strong>Location:</strong> {formData.location}</p>
-                            <p><strong>Tour Date:</strong> {formData.tourDate?.toLocaleDateString()}</p>
-                            <p><strong>Tour Time:</strong> {formData.tourTime}</p>
-                            <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
-                            <p><strong>Email:</strong> {formData.email}</p>
-                            <p><strong>Budget:</strong> {formData.budget}</p>
-                            <p><strong>Timeline:</strong> {formData.timeline}</p>
+                        <div className="glass border border-white/20 p-6 rounded-lg space-y-3">
+                            <p className="text-foreground"><strong className="text-gold">Property Type:</strong> {formData.propertyType.length > 0 ? formData.propertyType.map(value => {
+                                const option = PROPERTY_TYPE_OPTIONS.find(opt => opt.value === value);
+                                return option?.label || value;
+                            }).join(', ') : 'Not specified'}</p>
+                            <p className="text-foreground"><strong className="text-gold">Location:</strong> {formData.location.length > 0 ? formData.location.map(value => {
+                                const option = LOCATION_OPTIONS.find(opt => opt.value === value);
+                                return option?.label || value;
+                            }).join(', ') : 'Not specified'}</p>
+                            <p className="text-foreground"><strong className="text-gold">Tour Date:</strong> {formData.tourDate?.toLocaleDateString()}</p>
+                            <p className="text-foreground"><strong className="text-gold">Tour Time:</strong> {formData.tourTime}</p>
+                            <p className="text-foreground"><strong className="text-gold">Tour Type:</strong> {formData.tourType ? TOUR_TYPE_OPTIONS.find(opt => opt.value === formData.tourType)?.label || formData.tourType : 'Not specified'}</p>
+                            <p className="text-foreground"><strong className="text-gold">Name:</strong> {formData.firstName} {formData.lastName}</p>
+                            <p className="text-foreground"><strong className="text-gold">Email:</strong> {formData.email}</p>
+                            <p className="text-foreground"><strong className="text-gold">Budget:</strong> {formData.budget}</p>
+                            <p className="text-foreground"><strong className="text-gold">Timeline:</strong> {formData.timeline}</p>
                         </div>
 
                         {errors.submit && (
-                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                            <div className="glass border border-red-500/30 text-red-400 px-4 py-3 rounded-lg">
                                 {errors.submit}
                             </div>
                         )}
@@ -426,16 +453,16 @@ export function TourWizardControlProps({
                 {currentStep <= totalSteps && (
                     <div className="mb-8">
                         <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-foreground">
                                 Step {currentStep} of {totalSteps}
                             </span>
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-muted-foreground">
                                 {Math.round((currentStep / totalSteps) * 100)}% Complete
                             </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-white/10 rounded-full h-2">
                             <div
-                                className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                                className="bg-gold h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${(currentStep / totalSteps) * 100}%` }}
                             />
                         </div>

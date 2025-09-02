@@ -23,6 +23,55 @@ jest.mock('@/components/date-picker', () => ({
     ),
 }))
 
+// Mock MultiSelect component to avoid Command component issues in tests
+jest.mock('@/components/ui/multi-select', () => ({
+    MultiSelect: ({ options, selected, onChange, placeholder }: any) => {
+        const [localSelected, setLocalSelected] = React.useState(selected || []);
+
+        const handleOptionClick = (optionValue: string) => {
+            const newSelected = localSelected.includes(optionValue)
+                ? localSelected.filter(item => item !== optionValue)
+                : [...localSelected, optionValue];
+
+            setLocalSelected(newSelected);
+            onChange(newSelected);
+        };
+
+        return (
+            <div>
+                <button
+                    data-testid="multi-select-trigger"
+                    onClick={() => {
+                        // Just simulate opening the dropdown, don't auto-select
+                    }}
+                >
+                    {placeholder}
+                </button>
+                <div data-testid="multi-select-options">
+                    {options.map((option: any) => (
+                        <button
+                            key={option.value}
+                            data-testid={`option-${option.value}`}
+                            onClick={() => handleOptionClick(option.value)}
+                        >
+                            {option.label}
+                        </button>
+                    ))}
+                </div>
+                {localSelected.length > 0 && (
+                    <div data-testid="selected-items">
+                        {localSelected.map((item: string) => (
+                            <span key={item} data-testid={`selected-${item}`}>
+                                {options.find((opt: any) => opt.value === item)?.label || item}
+                            </span>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    },
+}))
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
     useRouter: () => ({
@@ -52,15 +101,28 @@ describe('TourWizardControlProps', () => {
             expect(screen.getByText('Tell us about your ideal property')).toBeInTheDocument()
         })
 
-        it('should navigate between steps using internal state', () => {
+        it('should navigate between steps using internal state', async () => {
             render(<TourWizardControlProps onSubmit={mockOnSubmit} />)
 
-            // Fill required fields for step 1
-            fireEvent.change(screen.getByPlaceholderText('e.g., Apartment, House, Villa'), {
-                target: { value: 'Apartment' }
-            })
-            fireEvent.change(screen.getByPlaceholderText('e.g., Punta del Este, La Barra'), {
-                target: { value: 'Punta del Este' }
+            // Fill required fields for step 1 - using MultiSelect components
+            const propertyTypeButtons = screen.getAllByTestId('multi-select-trigger')
+            const propertyTypeButton = propertyTypeButtons[0] // First MultiSelect (Property Type)
+            fireEvent.click(propertyTypeButton)
+
+            const apartmentOption = screen.getByTestId('option-apartment')
+            fireEvent.click(apartmentOption)
+
+            // For location, we need to find the second MultiSelect component
+            const locationButton = propertyTypeButtons[1] // Second MultiSelect (Location)
+            fireEvent.click(locationButton)
+
+            const puntaOption = screen.getByTestId('option-punta-del-este')
+            fireEvent.click(puntaOption)
+
+            // Wait for validation to clear and then click Next
+            await waitFor(() => {
+                expect(screen.queryByText('Property type is required')).not.toBeInTheDocument()
+                expect(screen.queryByText('Location is required')).not.toBeInTheDocument()
             })
 
             // Click Next
@@ -73,10 +135,15 @@ describe('TourWizardControlProps', () => {
         it('should update form data in internal state', () => {
             render(<TourWizardControlProps onSubmit={mockOnSubmit} />)
 
-            const propertyTypeInput = screen.getByPlaceholderText('e.g., Apartment, House, Villa')
-            fireEvent.change(propertyTypeInput, { target: { value: 'Villa' } })
+            const propertyTypeButtons = screen.getAllByTestId('multi-select-trigger')
+            const propertyTypeButton = propertyTypeButtons[0] // First MultiSelect (Property Type)
+            fireEvent.click(propertyTypeButton)
 
-            expect(propertyTypeInput).toHaveValue('Villa')
+            const villaOption = screen.getByTestId('option-villa')
+            fireEvent.click(villaOption)
+
+            // Check that Villa is selected
+            expect(screen.getByTestId('selected-villa')).toBeInTheDocument()
         })
 
         it('should validate required fields', () => {
@@ -95,12 +162,26 @@ describe('TourWizardControlProps', () => {
             render(<TourWizardControlProps onSubmit={mockOnSubmit} />)
 
             // Fill all required fields and navigate to submit step
-            fireEvent.change(screen.getByPlaceholderText('e.g., Apartment, House, Villa'), {
-                target: { value: 'Apartment' }
+            const propertyTypeButtons = screen.getAllByTestId('multi-select-trigger')
+            const propertyTypeButton = propertyTypeButtons[0] // First MultiSelect (Property Type)
+            fireEvent.click(propertyTypeButton)
+
+            const apartmentOption = screen.getByTestId('option-apartment')
+            fireEvent.click(apartmentOption)
+
+            // For location, we need to find the second MultiSelect component
+            const locationButton = propertyTypeButtons[1] // Second MultiSelect (Location)
+            fireEvent.click(locationButton)
+
+            const puntaOption = screen.getByTestId('option-punta-del-este')
+            fireEvent.click(puntaOption)
+
+            // Wait for validation to clear and then click Next
+            await waitFor(() => {
+                expect(screen.queryByText('Property type is required')).not.toBeInTheDocument()
+                expect(screen.queryByText('Location is required')).not.toBeInTheDocument()
             })
-            fireEvent.change(screen.getByPlaceholderText('e.g., Punta del Este, La Barra'), {
-                target: { value: 'Punta del Este' }
-            })
+
             fireEvent.click(screen.getByText('Next'))
 
             // Step 2
@@ -134,8 +215,8 @@ describe('TourWizardControlProps', () => {
             await waitFor(() => {
                 expect(mockOnSubmit).toHaveBeenCalledWith(
                     expect.objectContaining({
-                        propertyType: 'Apartment',
-                        location: 'Punta del Este',
+                        propertyType: ['apartment'],
+                        location: ['punta-del-este'],
                         firstName: 'John',
                         lastName: 'Doe',
                         email: 'john@example.com',
@@ -149,8 +230,8 @@ describe('TourWizardControlProps', () => {
 
     describe('Controlled Mode (External State)', () => {
         const controlledFormData: TourWizardData = {
-            propertyType: 'House',
-            location: 'La Barra',
+            propertyType: ['house'],
+            location: ['la-barra'],
             tourDate: new Date('2024-12-25'),
             tourTime: '2:00 PM',
             tourType: 'in-person',
@@ -194,15 +275,18 @@ describe('TourWizardControlProps', () => {
                 />
             )
 
-            // Change form data
-            fireEvent.change(screen.getByDisplayValue('House'), {
-                target: { value: 'Villa' }
-            })
+            // Change form data using MultiSelect
+            const propertyTypeButtons = screen.getAllByTestId('multi-select-trigger')
+            const propertyTypeButton = propertyTypeButtons[0]
+            fireEvent.click(propertyTypeButton)
+
+            const villaOption = screen.getByTestId('option-villa')
+            fireEvent.click(villaOption)
 
             expect(mockOnDataChange).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    propertyType: 'Villa',
-                    location: 'La Barra',
+                    propertyType: ['house', 'villa'],
+                    location: ['la-barra'],
                 })
             )
         })
@@ -320,12 +404,26 @@ describe('TourWizardControlProps', () => {
             render(<TourWizardControlProps onSubmit={mockOnSubmit} />)
 
             // Navigate to submit step by filling required fields
-            fireEvent.change(screen.getByPlaceholderText('e.g., Apartment, House, Villa'), {
-                target: { value: 'Apartment' }
+            const propertyTypeButtons = screen.getAllByTestId('multi-select-trigger')
+            const propertyTypeButton = propertyTypeButtons[0] // First MultiSelect (Property Type)
+            fireEvent.click(propertyTypeButton)
+
+            const apartmentOption = screen.getByTestId('option-apartment')
+            fireEvent.click(apartmentOption)
+
+            // For location, we need to find the second MultiSelect component
+            const locationButton = propertyTypeButtons[1] // Second MultiSelect (Location)
+            fireEvent.click(locationButton)
+
+            const puntaOption = screen.getByTestId('option-punta-del-este')
+            fireEvent.click(puntaOption)
+
+            // Wait for validation to clear and then click Next
+            await waitFor(() => {
+                expect(screen.queryByText('Property type is required')).not.toBeInTheDocument()
+                expect(screen.queryByText('Location is required')).not.toBeInTheDocument()
             })
-            fireEvent.change(screen.getByPlaceholderText('e.g., Punta del Este, La Barra'), {
-                target: { value: 'Punta del Este' }
-            })
+
             fireEvent.click(screen.getByText('Next'))
 
             // Step 2 - Fill required fields

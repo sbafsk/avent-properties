@@ -55,8 +55,8 @@ export function StepControlledTourWizard() {
 export function FullyControlledTourWizard() {
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<TourWizardData>({
-    propertyType: '',
-    location: '',
+    propertyType: [],
+    location: [],
     tourDate: null,
     tourTime: '',
     tourType: '',
@@ -127,8 +127,8 @@ export function HookBasedTourWizard() {
 export function SynchronizedTourWizards() {
   const [sharedStep, setSharedStep] = useState(1)
   const [wizard1Data, setWizard1Data] = useState<TourWizardData>({
-    propertyType: '',
-    location: '',
+    propertyType: [],
+    location: [],
     tourDate: null,
     tourTime: '',
     tourType: '',
@@ -142,8 +142,8 @@ export function SynchronizedTourWizards() {
     timeline: '',
   })
   const [wizard2Data, setWizard2Data] = useState<TourWizardData>({
-    propertyType: '',
-    location: '',
+    propertyType: [],
+    location: [],
     tourDate: null,
     tourTime: '',
     tourType: '',
@@ -266,8 +266,8 @@ export function StateManagementTourWizard() {
   const [globalState, setGlobalState] = useState({
     currentStep: 1,
     formData: {
-      propertyType: '',
-      location: '',
+      propertyType: [],
+      location: [],
       tourDate: null,
       tourTime: '',
       tourType: '',

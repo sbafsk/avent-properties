@@ -8,8 +8,8 @@ import { TourWizardControlProps } from "./tour-wizard-control-props"
 import { ChevronLeft, ChevronRight, Check, MapPin, Calendar, User, Settings, CheckCircle } from "lucide-react"
 
 interface TourWizardData {
-  propertyType: string
-  location: string
+  propertyType: string[]
+  location: string[]
   tourDate: Date | null
   tourTime: string
   tourType: string
@@ -24,8 +24,8 @@ interface TourWizardData {
 }
 
 const initialData: TourWizardData = {
-  propertyType: "",
-  location: "",
+  propertyType: [],
+  location: [],
   tourDate: null,
   tourTime: "",
   tourType: "",
