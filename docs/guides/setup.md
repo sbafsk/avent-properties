@@ -1,313 +1,279 @@
-# Development Environment Setup - Avent Properties
-
-> **AI Context**: This is the setup guide for developers.
-> For current status: see [../status/progress.yaml](../status/progress.yaml)
-> For architecture details: see [../architecture/overview.md](../architecture/overview.md)
+# Development Environment Setup Guide
 
 ## 🚀 **Quick Start**
 
-Get Avent Properties running on your local machine in under 10 minutes.
+### **Prerequisites**
+- Node.js 18+ 
+- Yarn package manager
+- Supabase account and project
+- Git
 
-## 📋 **Prerequisites**
-
-- **Node.js**: 18.17+ (LTS recommended)
-- **Yarn**: 1.22+ (preferred package manager)
-- **Git**: Latest version
-- **Supabase CLI**: For local development (optional)
-
-## 🔧 **Environment Setup**
-
-### **1. Clone Repository**
+### **1. Clone and Install**
 ```bash
 git clone <repository-url>
 cd avent-properties
-```
-
-### **2. Install Dependencies**
-```bash
 yarn install
 ```
 
-### **3. Environment Configuration**
-Create `.env.local` file in the root directory:
+### **2. Environment Setup**
 ```bash
+cp .env.example .env.local
+```
+
+Fill in your environment variables:
+```env
 # Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
-# Next.js Configuration
-NEXTAUTH_SECRET=your_nextauth_secret
-NEXTAUTH_URL=http://localhost:3000
-
-# Optional: Development Overrides
-NODE_ENV=development
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_NAME=Avent Properties
 ```
 
-### **4. Database Setup**
-```bash
-# Install Supabase CLI (if not already installed)
-npm install -g supabase
+### **3. Database Setup**
+1. Create a new Supabase project
+2. Run the database migrations (see `supabase-rls-setup.sql`)
+3. Set up Row Level Security (RLS) policies
+4. Configure authentication settings
 
-# Start local Supabase instance
-supabase start
-
-# Apply migrations
-supabase db reset
-```
-
-## 🏃‍♂️ **Running the Application**
-
-### **Development Mode**
+### **4. Development**
 ```bash
 # Start development server
 yarn dev
 
-# Open http://localhost:3000
-```
-
-### **Build & Production**
-```bash
-# Build for production
-yarn build
-
-# Start production server
-yarn start
-
-# Lint code
-yarn lint
-
 # Run tests
 yarn test
+
+# Run E2E tests
+yarn test:e2e
+
+# Type checking
+yarn type-check
+
+# Linting and formatting
+yarn lint
+yarn format
 ```
 
-## 🧪 **Testing Setup**
+## 🏗️ **Project Structure**
 
-### **Unit Tests**
+```
+avent-properties/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes (GraphQL)
+│   ├── auth/              # Authentication pages
+│   ├── dashboard/         # User dashboards
+│   ├── listings/          # Property listings
+│   ├── property/          # Property details
+│   └── reserve/           # Reservation flow
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   └── ...               # Feature components
+├── lib/                   # Utilities and configurations
+│   ├── graphql/          # GraphQL schema and resolvers
+│   ├── hooks/            # Custom React hooks
+│   ├── slices/           # Redux slices
+│   ├── supabase.ts       # Supabase client
+│   ├── apollo-client.ts  # Apollo Client config
+│   └── store.ts          # Redux store
+├── rules/                 # AI learning materials and development standards
+├── docs/                  # Project status and implementation tracking
+├── __tests__/            # Test files
+└── public/               # Static assets
+```
+
+## 🔐 **Authentication & Authorization**
+
+The platform supports three user roles:
+
+- **Client**: Browse properties, make reservations, view dashboard
+- **Agency**: Manage properties, view reservations, agency dashboard  
+- **Admin**: Full access, financial console, user management
+
+Authentication is handled via Supabase Auth with JWT tokens and Row Level Security (RLS) policies.
+
+## 🗄️ **Database Schema**
+
+### **Core Tables**
+- `users` - User accounts with role-based access
+- `properties` - Property listings with details and media
+- `agencies` - Real estate agencies
+- `tour_reservations` - Tour bookings with deposit tracking
+- `transactions` - Financial transactions and commissions
+- `contact_requests` - Customer inquiries
+
+## 🎨 **Design System**
+
+### **Colors**
+- **Primary**: Gold accents (#D4AF37)
+- **Background**: Dark theme with glassmorphism
+- **Text**: High contrast for accessibility
+
+### **Typography**
+- **Headings**: Playfair Display (luxury feel)
+- **Body**: Inter (modern readability)
+
+### **Components**
+- Glassmorphism cards with backdrop blur
+- Consistent spacing and typography
+- Responsive grid layouts
+- Accessible form components
+
+## 🧪 **Testing Strategy**
+
+### **Test Commands**
 ```bash
 # Run all tests
 yarn test
 
-# Run specific test file
-yarn test __tests__/graphql/enhanced-resolvers.test.ts
+# Run tests in watch mode
+yarn test:watch
 
 # Run tests with coverage
-yarn test --coverage
+yarn test:coverage
 
-# Watch mode
-yarn test --watch
-```
-
-### **GraphQL Testing**
-```bash
-# Test GraphQL endpoints
+# Run specific test files
 yarn test __tests__/graphql/
-
-# Test specific resolver
-yarn test __tests__/graphql/hybrid-resolver.test.ts
+yarn test __tests__/components/
 ```
 
-## 🗄️ **Database Management**
+### **Test Coverage**
+- **Unit Tests**: Jest + React Testing Library for components
+- **Integration Tests**: GraphQL API resolvers
+- **E2E Tests**: Playwright for critical user flows
+- **Coverage**: Minimum 80% coverage requirement
 
-### **Local Development**
+## 📦 **Available Scripts**
+
 ```bash
-# Start local Supabase
-supabase start
+# Development
+yarn dev              # Start development server
+yarn build            # Build for production
+yarn start            # Start production server
 
-# View local dashboard
-supabase status
+# Testing
+yarn test             # Run unit tests
+yarn test:ci          # Run tests with coverage
+yarn test:e2e         # Run E2E tests
 
-# Stop local instance
-supabase stop
-```
+# Code Quality
+yarn lint             # Run ESLint
+yarn format           # Format with Prettier
+yarn type-check       # TypeScript type checking
 
-### **Schema Changes**
-```bash
-# Generate new migration
-supabase db diff --schema public
-
-# Apply migrations
-supabase db push
-
-# Reset database
-supabase db reset
-```
-
-## 🔐 **Authentication Setup**
-
-### **Supabase Auth Configuration**
-1. Go to your Supabase dashboard
-2. Navigate to Authentication > Settings
-3. Configure email templates
-4. Set up OAuth providers (Google, Facebook)
-
-### **Local Testing**
-```bash
-# Create test user
-supabase auth signup --email test@example.com --password password123
-
-# Verify email (in local development)
-supabase auth verify --email test@example.com
-```
-
-## 🎨 **UI Development**
-
-### **Component Development**
-```bash
-# Storybook (if configured)
-yarn storybook
-
-# Component testing
-yarn test components/
-```
-
-### **Styling**
-- **TailwindCSS**: Utility-first CSS framework
-- **Custom Theme**: Gold luxury color palette
-- **Glass Morphism**: Premium visual effects
-- **Responsive**: Mobile-first design approach
-
-## 📱 **Mobile Development**
-
-### **Responsive Testing**
-- **Chrome DevTools**: Device simulation
-- **BrowserStack**: Cross-browser testing
-- **Lighthouse**: Performance auditing
-
-### **Breakpoints**
-```css
-/* Mobile First */
-@media (min-width: 768px) { /* Tablet */ }
-@media (min-width: 1024px) { /* Desktop */ }
-@media (min-width: 1440px) { /* Large Desktop */ }
+# Git Hooks (automatic)
+# pre-commit: lint, format, type-check
+# pre-push: full test suite
 ```
 
 ## 🚀 **Deployment**
 
-### **Vercel Deployment**
-```bash
-# Install Vercel CLI
-npm i -g vercel
+### **MVP Deployment (Vercel)**
+1. Connect GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-# Deploy to Vercel
-vercel
+### **Future AWS Migration**
+- Database: Amazon RDS (PostgreSQL)
+- Storage: S3 + CloudFront
+- API: AWS AppSync or Lambda
+- Frontend: Amplify or CloudFront
 
-# Deploy to production
-vercel --prod
+## 🔧 **GraphQL Development**
+
+### **Current Architecture**
+- **Direct Apollo Server + Supabase SDK**
+- **No hybrid routing or complexity**
+- **Full TypeScript support**
+- **Standard Apollo patterns**
+
+### **Key Files**
+```
+lib/graphql/
+├── schema.ts              # GraphQL schema definition
+├── context.ts             # Apollo context with auth
+└── resolvers/
+    ├── index.ts           # Resolver aggregation
+    ├── queries.ts         # Query resolvers
+    └── mutations.ts       # Mutation resolvers
 ```
 
-### **Environment Variables**
-Set these in your Vercel dashboard:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+### **Development Guidelines**
+- Use direct Supabase SDK calls in resolvers
+- Maintain full TypeScript coverage
+- Follow standard Apollo patterns
+- Write comprehensive tests
 
-## 🔍 **Debugging**
+## 📚 **Documentation Structure**
 
-### **GraphQL Debugging**
-```bash
-# Enable GraphQL logging
-DEBUG=apollo-server:* yarn dev
+**🎯 Complete documentation is organized in the `/docs` folder**
 
-# View GraphQL playground
-http://localhost:3000/api/graphql
-```
+### **Quick Navigation**
+- **`docs/README.md`** - **COMPLETE PROJECT OVERVIEW** (Start here!)
+- **`docs/status/progress.yaml`** - Current project status and progress
+- **`docs/architecture/overview.md`** - Quick navigation guide
+- **`docs/guides/`** - Implementation guides
 
-### **Database Debugging**
-```bash
-# View Supabase logs
-supabase logs
+### **For AI Assistants & Developers**
+- **`rules/`** - Development standards and AI training materials
+- **`docs/`** - Project status and implementation guides
 
-# Database inspection
-supabase db inspect
-```
+**→ See `docs/README.md` for complete documentation structure and navigation**
 
-### **Performance Monitoring**
-- **React DevTools**: Component profiling
-- **Network Tab**: API request analysis
-- **Performance Tab**: Rendering metrics
+## 🤖 **AI Development Assistance**
 
-## 📚 **Useful Commands**
+### **MCP Integration**
+We use Model Context Protocol (MCP) to enhance AI development assistance with 2-server setup (docs + rules).
 
-### **Development**
-```bash
-yarn dev          # Start development server
-yarn build        # Build for production
-yarn start        # Start production server
-yarn lint         # Lint code
-yarn test         # Run tests
-yarn type-check   # TypeScript type checking
-```
+**→ See `docs/README.md` for complete MCP setup and testing instructions**
 
-### **Database**
-```bash
-supabase start    # Start local database
-supabase stop     # Stop local database
-supabase status   # Check status
-supabase db reset # Reset database
-```
+## 🤝 **Contributing**
 
-### **Git Workflow**
-```bash
-git status        # Check repository status
-git add .         # Stage all changes
-git commit -m ""  # Commit changes
-git push          # Push to remote
-```
+1. **Follow coding standards** in `rules/RULES.md`
+2. **Write tests** for new features
+3. **Use conventional commit messages**
+4. **Create feature branches** from `dev`
+5. **Submit pull requests** for review
+6. **Update documentation** when making changes
 
-## 🆘 **Troubleshooting**
+**→ See `docs/MAINTENANCE_GUIDE.md` for documentation update workflow**
 
-### **Common Issues**
+## 📄 **License**
 
-#### **Port 3000 Already in Use**
-```bash
-# Kill process on port 3000
-lsof -ti:3000 | xargs kill -9
-
-# Or use different port
-yarn dev -p 3001
-```
-
-#### **Supabase Connection Issues**
-```bash
-# Check Supabase status
-supabase status
-
-# Restart local instance
-supabase stop && supabase start
-```
-
-#### **TypeScript Errors**
-```bash
-# Clear TypeScript cache
-rm -rf .next
-rm -rf node_modules/.cache
-
-# Reinstall dependencies
-yarn install
-```
-
-#### **Test Failures**
-```bash
-# Clear Jest cache
-yarn test --clearCache
-
-# Run tests with verbose output
-yarn test --verbose
-```
-
-## 📞 **Getting Help**
-
-### **Resources**
-- **Project Documentation**: [docs/index.md](../index.md)
-- **Architecture Overview**: [docs/architecture/overview.md](../architecture/overview.md)
-- **Current Status**: [docs/status/progress.yaml](../status/progress.yaml)
-
-### **Support Channels**
-- **GitHub Issues**: Report bugs and feature requests
-- **Documentation**: Check this guide and related docs
-- **Team Chat**: Internal development discussions
+Private project - All rights reserved
 
 ---
 
-> **Next Steps**: [Architecture Overview](../architecture/overview.md) | [Current Status](../status/progress.yaml)
+**Built with ❤️ by Trees in Uruguay**
+
+---
+
+## 🔄 **Documentation Status**
+
+- **Last Updated**: January 2025
+- **Documentation**: ✅ **CONSOLIDATED** - Single source of truth in `docs/README.md`
+- **MCP Integration**: ✅ **COMPLETE** - AI development assistance operational
+- **Next Review**: Monthly or when major changes occur
+
+**📚 For complete documentation, start with `docs/README.md`**
+
+---
+
+## 🎯 **Quick Start**
+
+1. **Read this file** for project overview and setup
+2. **Go to `docs/README.md`** for complete documentation
+3. **Check `docs/status/progress.yaml`** for current status
+4. **Follow `docs/MAINTENANCE_GUIDE.md`** for keeping docs updated
+
+---
+
+## 🚀 **Recent Achievement**
+
+**GraphQL Migration Complete!** ✅ We've successfully migrated from a complex hybrid architecture to a clean, direct Apollo + Supabase implementation with full TypeScript support and comprehensive testing.
+
+---
+
+**Welcome to Avent Properties! 🏖️**
