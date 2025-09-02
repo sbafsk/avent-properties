@@ -2,9 +2,10 @@ import { ApolloServer } from '@apollo/server'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { typeDefs } from '@/lib/graphql/schema'
 import { resolvers } from '@/lib/graphql/resolvers'
+import { createContext } from '@/lib/graphql/context'
 import { NextRequest } from 'next/server'
 
-const server = new ApolloServer<{ token?: string }>({
+const server = new ApolloServer({
 	typeDefs,
 	resolvers,
 	formatError: (error) => {
@@ -18,16 +19,9 @@ const server = new ApolloServer<{ token?: string }>({
 	},
 })
 
-const handler = startServerAndCreateNextHandler<NextRequest>(server, {
+const handler = startServerAndCreateNextHandler(server, {
 	context: async (req) => {
-		// Get the authorization header
-		const authHeader = req.headers.get('authorization')
-		const token = authHeader?.replace('Bearer ', '')
-
-		return {
-			req,
-			token,
-		}
+		return createContext({ req })
 	},
 })
 
