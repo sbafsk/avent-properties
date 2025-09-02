@@ -1,288 +1,184 @@
-import { gql } from '@apollo/client'
+import { gql } from 'graphql-tag'
 
 export const typeDefs = gql`
-	type User {
-		id: ID!
-		email: String!
-		name: String!
-		role: UserRole!
-		created_at: String!
-		updated_at: String!
-		reservations: [TourReservation!]
-	}
+  scalar DateTime
+  scalar JSON
+  scalar UUID
 
-	enum UserRole {
-		ADMIN
-		CLIENT
-		AGENCY
-	}
+  type Property {
+    id: UUID!
+    title: String!
+    description: String
+    price: Float!
+    currency: String!
+    city: String!
+    neighborhood: String
+    property_type: String!
+    bedrooms: Int!
+    bathrooms: Int!
+    area_m2: Float!
+    amenities: [String!]!
+    images: [String!]!
+    status: PropertyStatus!
+    agency_id: UUID!
+    created_at: DateTime!
+    updated_at: DateTime!
+    
+    # Relations
+    agency: Agency
+    reservations: [TourReservation!]!
+  }
 
-	type Property {
-		id: ID!
-		title: String!
-		description: String!
-		price: Float!
-		currency: String!
-		city: String!
-		neighborhood: String
-		property_type: String!
-		bedrooms: Int
-		bathrooms: Int
-		area_m2: Int
-		amenities: [String!]
-		images: [String!]
-		status: PropertyStatus!
-		agency_id: String!
-		created_at: String!
-		updated_at: String!
-		agency: Agency
-		reservations: [TourReservation!]
-	}
+  type Agency {
+    id: UUID!
+    name: String!
+    email: String!
+    phone: String
+    address: String
+    created_at: DateTime!
+    updated_at: DateTime!
+    
+    # Relations
+    properties: [Property!]!
+  }
 
-	enum PropertyStatus {
-		AVAILABLE
-		RESERVED
-		SOLD
-	}
+  type User {
+    id: UUID!
+    email: String!
+    name: String
+    role: UserRole!
+    created_at: DateTime!
+    updated_at: DateTime!
+    
+    # Relations
+    reservations: [TourReservation!]!
+  }
 
-	type Agency {
-		id: ID!
-		name: String!
-		email: String!
-		phone: String
-		address: String
-		properties: [Property!]
-		created_at: String!
-		updated_at: String!
-	}
+  type TourReservation {
+    id: UUID!
+    scheduled_date: DateTime!
+    deposit_amount: Float!
+    status: ReservationStatus!
+    user_id: UUID!
+    property_id: UUID!
+    created_at: DateTime!
+    updated_at: DateTime!
+    
+    # Relations
+    user: User!
+    property: Property!
+  }
 
-	type TourReservation {
-		id: ID!
-		user: User!
-		property: Property!
-		scheduled_date: String!
-		deposit_amount: Float!
-		status: ReservationStatus!
-		created_at: String!
-		updated_at: String!
-	}
+  enum PropertyStatus {
+    AVAILABLE
+    RESERVED
+    SOLD
+  }
 
-	enum ReservationStatus {
-		PENDING
-		CONFIRMED
-		CANCELLED
-		COMPLETED
-	}
+  enum UserRole {
+    USER
+    AGENT
+    ADMIN
+  }
 
-	type Transaction {
-		id: ID!
-		amount: Float!
-		type: TransactionType!
-		status: TxStatus!
-		reservation_id: String
-		user_id: String!
-		created_at: String!
-		updated_at: String!
-	}
+  enum ReservationStatus {
+    PENDING
+    CONFIRMED
+    CANCELLED
+  }
 
-	enum TransactionType {
-		DEPOSIT
-		COMMISSION
-		REFUND
-	}
+  # Input Types
+  input PropertyFilters {
+    city: String
+    property_type: String
+    min_price: Float
+    max_price: Float
+    bedrooms: Int
+    status: PropertyStatus
+  }
 
-	enum TxStatus {
-		PENDING
-		PAID
-		FAILED
-		REFUNDED
-	}
+  input PaginationInput {
+    limit: Int = 50
+    offset: Int = 0
+  }
 
-	type ContactRequest {
-		id: ID!
-		name: String!
-		email: String!
-		phone: String
-		message: String!
-		property_id: String
-		status: ContactStatus!
-		created_at: String!
-		updated_at: String!
-	}
+  input CreatePropertyInput {
+    title: String!
+    description: String!
+    price: Float!
+    currency: String!
+    city: String!
+    neighborhood: String
+    property_type: String!
+    bedrooms: Int!
+    bathrooms: Int!
+    area_m2: Float!
+    amenities: [String!]!
+    images: [String!]!
+    status: PropertyStatus!
+    agency_id: UUID!
+  }
 
-	enum ContactStatus {
-		NEW
-		IN_PROGRESS
-		RESOLVED
-		CLOSED
-	}
+  input UpdatePropertyInput {
+    id: UUID!
+    title: String
+    description: String
+    price: Float
+    currency: String
+    city: String
+    neighborhood: String
+    property_type: String
+    bedrooms: Int
+    bathrooms: Int
+    area_m2: Float
+    amenities: [String!]
+    images: [String!]
+    status: PropertyStatus
+    agency_id: UUID
+  }
 
-	type Query {
-		# User queries
-		me: User
-		users: [User!]!
-		user(id: ID!): User
+  input CreateReservationInput {
+    property_id: UUID!
+    scheduled_date: DateTime!
+    deposit_amount: Float!
+  }
 
-		# Property queries
-		properties(
-			city: String
-			property_type: String
-			min_price: Float
-			max_price: Float
-			bedrooms: Int
-			status: PropertyStatus
-			limit: Int
-			offset: Int
-		): [Property!]!
-		property(id: ID!): Property
-		propertiesByAgency(agency_id: ID!): [Property!]!
+  input UpdateReservationInput {
+    id: UUID!
+    scheduled_date: DateTime
+    deposit_amount: Float
+    status: ReservationStatus
+  }
 
-		# Agency queries
-		agencies: [Agency!]!
-		agency(id: ID!): Agency
+  type Query {
+    # Properties
+    properties(filters: PropertyFilters, pagination: PaginationInput): [Property!]!
+    property(id: UUID!): Property
+    
+    # Agencies
+    agencies: [Agency!]!
+    agency(id: UUID!): Agency
+    
+    # Users
+    users: [User!]!
+    user(id: UUID!): User
+    me: User
+    
+    # Reservations
+    reservations: [TourReservation!]!
+    reservation(id: UUID!): TourReservation
+    myReservations: [TourReservation!]!
+  }
 
-		# Reservation queries
-		reservations: [TourReservation!]!
-		reservation(id: ID!): TourReservation
-		userReservations(user_id: ID!): [TourReservation!]!
-		propertyReservations(property_id: ID!): [TourReservation!]!
-
-		# Transaction queries
-		transactions: [Transaction!]!
-		transaction(id: ID!): Transaction
-		userTransactions(user_id: ID!): [Transaction!]!
-
-		# Contact queries
-		contactRequests: [ContactRequest!]!
-		contactRequest(id: ID!): ContactRequest
-	}
-
-	type Mutation {
-		# User mutations
-		createUser(input: CreateUserInput!): User!
-		updateUser(id: ID!, input: UpdateUserInput!): User!
-		deleteUser(id: ID!): Boolean!
-
-		# Property mutations
-		createProperty(input: CreatePropertyInput!): Property!
-		updateProperty(id: ID!, input: UpdatePropertyInput!): Property!
-		deleteProperty(id: ID!): Boolean!
-
-		# Agency mutations
-		createAgency(input: CreateAgencyInput!): Agency!
-		updateAgency(id: ID!, input: UpdateAgencyInput!): Agency!
-		deleteAgency(id: ID!): Boolean!
-
-		# Reservation mutations
-		createReservation(input: CreateReservationInput!): TourReservation!
-		updateReservation(id: ID!, input: UpdateReservationInput!): TourReservation!
-		cancelReservation(id: ID!): TourReservation!
-
-		# Transaction mutations
-		createTransaction(input: CreateTransactionInput!): Transaction!
-		updateTransaction(id: ID!, input: UpdateTransactionInput!): Transaction!
-
-		# Contact mutations
-		createContactRequest(input: CreateContactRequestInput!): ContactRequest!
-		updateContactRequest(id: ID!, input: UpdateContactRequestInput!): ContactRequest!
-	}
-
-	# Input types
-	input CreateUserInput {
-		email: String!
-		name: String!
-		role: UserRole!
-	}
-
-	input UpdateUserInput {
-		email: String
-		name: String
-		role: UserRole
-	}
-
-	input CreatePropertyInput {
-		title: String!
-		description: String!
-		price: Float!
-		currency: String!
-		city: String!
-		neighborhood: String
-		property_type: String!
-		bedrooms: Int
-		bathrooms: Int
-		area_m2: Int
-		amenities: [String!]
-		images: [String!]
-		status: PropertyStatus!
-		agency_id: String!
-	}
-
-	input UpdatePropertyInput {
-		title: String
-		description: String
-		price: Float
-		currency: String
-		city: String
-		neighborhood: String
-		property_type: String
-		bedrooms: Int
-		bathrooms: Int
-		area_m2: Int
-		amenities: [String!]
-		images: [String!]
-		status: PropertyStatus
-		agency_id: String
-	}
-
-	input CreateAgencyInput {
-		name: String!
-		email: String!
-		phone: String
-		address: String
-	}
-
-	input UpdateAgencyInput {
-		name: String
-		email: String
-		phone: String
-		address: String
-	}
-
-	input CreateReservationInput {
-		user_id: String!
-		property_id: String!
-		scheduled_date: String!
-		deposit_amount: Float!
-	}
-
-	input UpdateReservationInput {
-		scheduled_date: String
-		deposit_amount: Float
-		status: ReservationStatus
-	}
-
-	input CreateTransactionInput {
-		amount: Float!
-		type: TransactionType!
-		reservation_id: String
-		user_id: String!
-	}
-
-	input UpdateTransactionInput {
-		amount: Float
-		type: TransactionType
-		status: TxStatus
-	}
-
-	input CreateContactRequestInput {
-		name: String!
-		email: String!
-		phone: String
-		message: String!
-		property_id: String
-	}
-
-	input UpdateContactRequestInput {
-		status: ContactStatus
-	}
+  type Mutation {
+    # Reservations
+    createReservation(input: CreateReservationInput!): TourReservation!
+    updateReservation(input: UpdateReservationInput!): TourReservation!
+    cancelReservation(id: UUID!): TourReservation!
+    
+    # Properties (Admin only)
+    createProperty(input: CreatePropertyInput!): Property!
+    updateProperty(input: UpdatePropertyInput!): Property!
+    deleteProperty(id: UUID!): Boolean!
+  }
 `
