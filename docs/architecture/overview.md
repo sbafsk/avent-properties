@@ -1,193 +1,232 @@
-# System Architecture Overview - Avent Properties
-
-> **AI Context**: This is the single source of truth for system architecture.
-> For current status: see [../status/progress.yaml](../status/progress.yaml)
-> For implementation details: see specific architecture files
+# System Architecture Overview
 
 ## 🏗️ **Architecture Overview**
 
-Avent Properties implements a **hybrid GraphQL architecture** that combines the best of both worlds: Supabase's auto-generated GraphQL for simple CRUD operations and a custom Apollo Server for complex business logic.
+Avent Properties implements a **direct Apollo Server + Supabase SDK architecture** that provides optimal performance, maintainability, and type safety.
 
-## 🔄 **Hybrid GraphQL Architecture**
+## 🔄 **Direct GraphQL Architecture**
 
-### **Core Concept**
-The system intelligently routes GraphQL queries based on complexity:
-- **Simple Operations** → Supabase GraphQL (optimized performance)
-- **Complex Logic** → Custom Apollo Server (business rules, validation)
+Our GraphQL implementation follows a clean, direct approach:
 
-### **Architecture Diagram**
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Client App    │───▶│  Hybrid Resolver │───▶│ Supabase GraphQL│
-│  (Next.js 15)   │    │                  │    │   (Simple CRUD) │
+│   Client App    │───▶│  Apollo Server   │───▶│   Supabase      │
+│                 │    │                  │    │   PostgreSQL    │
+│ - React 19      │    │ - Schema         │    │ - Database      │
+│ - Apollo Client │    │ - Resolvers      │    │ - Auth          │
+│ - TypeScript    │    │ - Context        │    │ - Storage       │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
-                                │
-                                ▼
-                       ┌──────────────────┐
-                       │  Apollo Server   │
-                       │ (Complex Logic)  │
-                       └──────────────────┘
 ```
 
-### **Query Routing Logic**
-```typescript
-// Simple operations (routed to Supabase)
-const simpleOperations = [
-  'properties', 'property', 'agencies', 'agency',
-  'users', 'user', 'reservations', 'reservation'
-]
-
-// Complex operations (routed to Apollo)
-const complexOperations = [
-  'me', 'createReservation', 'updateReservation', 
-  'cancelReservation', 'createTransaction'
-]
-```
+### **Key Benefits**
+- **Direct Database Access**: No GraphQL-to-GraphQL overhead
+- **Type Safety**: Full TypeScript support with generated Supabase types
+- **Performance**: Optimized queries with efficient joins
+- **Maintainability**: Clean, standard Apollo patterns
+- **Scalability**: Easy to extend with new resolvers
 
 ## 🚀 **Performance Features**
 
-### **1. Batch Query Optimization**
-- Groups multiple GraphQL operations into single requests
-- Reduces database round trips by 60-80%
-- Automatic operation prioritization (high/medium/low)
+### **1. Direct Query Optimization**
+- **Eliminated Overhead**: No intermediate GraphQL layer
+- **Efficient Joins**: Direct database queries with proper indexing
+- **Connection Pooling**: Supabase handles database connections
 
-### **2. Performance Monitoring**
-- Real-time query execution time tracking
-- Database query count monitoring
-- Cache hit/miss ratio analysis
-- Performance recommendations generation
+### **2. Type Safety & Validation**
+- **Generated Types**: Automatic TypeScript types from Supabase schema
+- **Runtime Validation**: GraphQL schema validation
+- **Compile-time Checks**: Full TypeScript coverage
 
-### **3. Enhanced Caching**
-- React Query with optimized defaults
-- Stale time: 5 minutes
-- Garbage collection: 10 minutes
-- Smart retry logic for network failures
+### **3. Caching Strategy**
+- **Apollo Client Cache**: Intelligent query result caching
+- **Database Query Cache**: Supabase query result caching
+- **Response Headers**: Proper cache control headers
 
-## 🗄️ **Data Layer**
+## 🏛️ **System Components**
 
-### **Database Schema**
-- **PostgreSQL** via Supabase
-- **Row Level Security (RLS)** for data isolation
-- **Real-time subscriptions** for live updates
-- **Automatic backups** and point-in-time recovery
-
-### **Key Tables**
-```sql
--- Core entities
-users (id, email, role, profile_data)
-properties (id, title, price, location, amenities)
-agencies (id, name, contact_info)
-tour_reservations (id, user_id, property_id, status, date)
-transactions (id, amount, type, status, metadata)
+### **Frontend Layer**
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Client Application                       │
+├─────────────────────────────────────────────────────────────┤
+│  Pages & Routes  │  Components  │  State Management       │
+│  - App Router    │  - UI Kit    │  - Redux Toolkit        │
+│  - Dynamic       │  - Forms     │  - React Query          │
+│  - Static        │  - Layouts   │  - Local Storage        │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## 🔐 **Security & Authentication**
-
-### **Authentication Flow**
-1. **Supabase Auth** handles user registration/login
-2. **JWT tokens** for API authentication
-3. **Row Level Security** for data access control
-4. **Role-based permissions** (user, agent, admin)
-
-### **Security Features**
-- **HTTPS only** in production
-- **CORS configuration** for API access
-- **Input validation** at GraphQL layer
-- **SQL injection protection** via Supabase
-
-## 🌐 **Frontend Architecture**
-
-### **Component Structure**
+### **API Layer**
 ```
-components/
-├── ui/                    # Reusable UI components
-├── forms/                 # Form components
-├── layout/                # Layout components
-└── business/              # Business logic components
-    ├── property-card.tsx
-    ├── tour-wizard.tsx
-    └── agency-dashboard.tsx
+┌─────────────────────────────────────────────────────────────┐
+│                    GraphQL API                             │
+├─────────────────────────────────────────────────────────────┤
+│  Apollo Server   │  Resolvers   │  Context & Auth         │
+│  - Schema        │  - Queries   │  - JWT Validation       │
+│  - Middleware    │  - Mutations │  - Role-based Access    │
+│  - Error Handling│  - Validation│  - User Context         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### **State Management**
-- **React Query** for server state
-- **React Context** for global UI state
-- **Local state** for component-specific data
-- **Optimistic updates** for better UX
+### **Data Layer**
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Data Management                         │
+├─────────────────────────────────────────────────────────────┤
+│  Supabase SDK    │  Database    │  Storage & Auth          │
+│  - Client        │  - PostgreSQL│  - File Storage          │
+│  - Queries       │  - RLS       │  - User Management      │
+│  - Subscriptions │  - Indexes   │  - Session Handling      │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## 📱 **Responsive Design**
+## 🔐 **Authentication & Authorization**
 
-### **Design System**
-- **TailwindCSS** for utility-first styling
-- **Custom color palette** (gold, luxury theme)
-- **Glass morphism** effects for premium feel
-- **Mobile-first** responsive design
+### **JWT-based Authentication**
+- **Token Management**: Secure JWT tokens via Supabase Auth
+- **Role-based Access**: Client, Agency, Admin permissions
+- **Row Level Security**: Database-level access control
 
-### **Breakpoints**
-- **Mobile**: 320px - 768px
-- **Tablet**: 768px - 1024px
-- **Desktop**: 1024px+
-- **Large Desktop**: 1440px+
+### **Authorization Flow**
+```
+1. User Login → Supabase Auth → JWT Token
+2. Token Validation → Apollo Context → User Info
+3. Resolver Execution → Role Check → Data Access
+4. RLS Policies → Database Query → Filtered Results
+```
 
-## 🚀 **Deployment & Infrastructure**
+## 📊 **Data Flow**
 
-### **Current Setup**
-- **Frontend**: Vercel (automatic deployments)
-- **Backend**: Supabase (managed PostgreSQL)
-- **CDN**: Vercel Edge Network
-- **Monitoring**: Vercel Analytics + Supabase Dashboard
+### **Query Flow**
+```
+Client Request → Apollo Server → Resolver → Supabase SDK → PostgreSQL
+     ↓              ↓            ↓           ↓           ↓
+  GraphQL Query → Schema → Business Logic → Database → Results
+     ↓              ↓            ↓           ↓           ↓
+  Cached Result ← Apollo Cache ← Response ← Supabase ← Data
+```
 
-### **Future Migration Path**
-- **Backend**: AWS (ECS/Fargate)
-- **Database**: RDS PostgreSQL
-- **CDN**: CloudFront
-- **Monitoring**: CloudWatch + DataDog
+### **Mutation Flow**
+```
+Client Mutation → Apollo Server → Resolver → Validation → Supabase SDK
+     ↓              ↓            ↓           ↓           ↓
+  GraphQL Input → Schema → Business Rules → Input Check → Database
+     ↓              ↓            ↓           ↓           ↓
+  Success/Error ← Response ← Audit Log ← Transaction ← Commit
+```
 
-## 🔧 **Development Workflow**
+## 🗄️ **Database Schema**
 
-### **Code Quality**
-- **TypeScript** for type safety
-- **ESLint** for code standards
-- **Prettier** for formatting
-- **Jest** for unit testing
+### **Core Tables**
+- **`users`** - User accounts with role-based access
+- **`properties`** - Property listings with details and media
+- **`agencies`** - Real estate agencies
+- **`tour_reservations`** - Tour bookings with deposit tracking
+- **`transactions`** - Financial transactions and commissions
+- **`contact_requests`** - Customer inquiries
 
-### **Testing Strategy**
-- **Unit tests** for resolvers and utilities
-- **Integration tests** for GraphQL endpoints
-- **Component tests** for React components
-- **E2E tests** for critical user flows
+### **Relationships**
+```
+users (1) ←→ (many) tour_reservations
+users (1) ←→ (many) transactions
+agencies (1) ←→ (many) properties
+properties (1) ←→ (many) tour_reservations
+tour_reservations (1) ←→ (1) transactions
+```
 
-## 📊 **Performance Metrics**
+## 🔧 **Development Architecture**
 
-### **Current Benchmarks**
-- **Page Load**: <2 seconds
-- **GraphQL Response**: <500ms average
-- **Database Queries**: <100ms average
-- **Cache Hit Rate**: >80%
+### **File Structure**
+```
+lib/graphql/
+├── schema.ts              # GraphQL schema definition
+├── context.ts             # Apollo context with auth
+└── resolvers/
+    ├── index.ts           # Resolver aggregation
+    ├── queries.ts         # Query resolvers
+    └── mutations.ts       # Mutation resolvers
 
-### **Optimization Targets**
-- **Page Load**: <1.5 seconds
-- **GraphQL Response**: <300ms average
-- **Database Queries**: <50ms average
-- **Cache Hit Rate**: >90%
+lib/
+├── database.types.ts      # Generated Supabase types
+├── supabase.ts            # Supabase client configuration
+└── apollo-client.ts       # Apollo client configuration
+```
 
-## 🔮 **Future Roadmap**
+### **Type Safety**
+- **Generated Types**: `Database` interface from Supabase
+- **GraphQL Types**: Schema-driven type definitions
+- **Resolver Types**: Full TypeScript coverage
+- **Context Types**: Typed authentication context
 
-### **Phase 1 (Q1 2025)**
-- Tour reservation system completion
-- Property management enhancements
-- User experience optimization
+## 🚀 **Performance Optimization**
 
-### **Phase 2 (Q2 2025)**
-- Advanced analytics dashboard
-- Multi-language support
-- Mobile app development
+### **Query Optimization**
+- **Efficient Joins**: Proper database relationships
+- **Indexing**: Strategic database indexes
+- **Pagination**: Cursor-based pagination
+- **Filtering**: Database-level filtering
 
-### **Phase 3 (Q3 2025)**
-- AI-powered property recommendations
-- Advanced search and filtering
-- Integration with external APIs
+### **Caching Strategy**
+- **Apollo Client**: Query result caching
+- **Database**: Query result caching
+- **CDN**: Static asset caching
+- **Browser**: HTTP cache headers
+
+## 🔒 **Security Features**
+
+### **Data Protection**
+- **Row Level Security**: Database-level access control
+- **Input Validation**: GraphQL schema validation
+- **SQL Injection**: Parameterized queries via Supabase
+- **XSS Protection**: Content Security Policy
+
+### **Authentication Security**
+- **JWT Tokens**: Secure token management
+- **Role Validation**: Server-side role checking
+- **Session Management**: Secure session handling
+- **Rate Limiting**: API request throttling
+
+## 📈 **Scalability Considerations**
+
+### **Horizontal Scaling**
+- **Load Balancing**: Multiple server instances
+- **Database Sharding**: Future PostgreSQL scaling
+- **CDN**: Global content distribution
+- **Microservices**: Future service decomposition
+
+### **Performance Monitoring**
+- **Query Performance**: GraphQL execution timing
+- **Database Load**: Connection pool monitoring
+- **Cache Efficiency**: Hit/miss ratio tracking
+- **Response Times**: End-to-end latency
+
+## 🧪 **Testing Strategy**
+
+### **Test Coverage**
+- **Unit Tests**: Resolver function testing
+- **Integration Tests**: GraphQL endpoint testing
+- **E2E Tests**: Full user flow testing
+- **Performance Tests**: Load and stress testing
+
+### **Test Tools**
+- **Jest**: Unit and integration testing
+- **React Testing Library**: Component testing
+- **Playwright**: E2E testing
+- **GraphQL Playground**: API testing
 
 ---
 
-> **Related**: [Current Status](../status/progress.yaml) | [API Reference](api.md) | [Database Schema](database.md)
+## 🎯 **Architecture Benefits**
+
+| **Aspect** | **Benefit** |
+|------------|-------------|
+| **Performance** | Direct database access, no overhead |
+| **Maintainability** | Standard Apollo patterns, clean code |
+| **Type Safety** | Full TypeScript coverage |
+| **Scalability** | Easy to extend and modify |
+| **Security** | JWT + RLS + input validation |
+| **Testing** | Comprehensive test coverage |
+
+---
+
+**This architecture provides a solid foundation for building and scaling the Avent Properties platform with optimal performance and maintainability.**
