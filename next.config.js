@@ -38,6 +38,20 @@ const nextConfig = {
 
   // Bundle optimization
   webpack: (config, { dev, isServer }) => {
+    // Suppress punycode deprecation warning
+    config.ignoreWarnings = [
+      {
+        module: /node_modules\/punycode/,
+        message: /The `punycode` module is deprecated/,
+      },
+    ]
+
+    // Add fallbacks for Node.js modules
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      punycode: false,
+    }
+
     // Optimize bundle size
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
