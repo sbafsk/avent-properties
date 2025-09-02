@@ -1,0 +1,39 @@
+project:
+  name: "Avent Properties"
+  type: "Luxury Real Estate Platform"
+  target_market: "Dubai HNWIs → Uruguay Properties"
+  description: "Premium real estate investment platform connecting Dubai high-net-worth individuals with exclusive Uruguayan properties"
+  
+current_status:
+  phase: "Business Features Development"
+  completion: "Foundation 100%, GraphQL 100%, Testing 100%"
+  next_priority: "Tour Reservation System & Property Management"
+  
+tech_stack:
+  frontend: "Next.js 15 + TypeScript + TailwindCSS"
+  backend: "Supabase (MVP) → AWS (planned)"
+  api: "Hybrid GraphQL (Supabase + Apollo Server)"
+  database: "PostgreSQL via Supabase"
+  auth: "Supabase Auth with JWT"
+  deployment: "Vercel + Supabase"
+  
+architecture:
+  pattern: "Hybrid GraphQL Architecture"
+  description: "Combines Supabase auto-generated GraphQL for simple CRUD with custom Apollo Server for complex business logic"
+  status: "Production Ready"
+  
+current_phase:
+  name: "Business Features Development"
+  focus: "Tour reservations, property management, user experience"
+  timeline: "Q1 2025"
+  
+references:
+  detailed_status: "docs/status/progress.yaml"
+  architecture: "docs/architecture/overview.md"
+  standards: "standards/coding.md"
+  setup: "docs/guides/setup.md"
+  
+ai_guidelines:
+  context_priority: "Always check .ai/context.yaml first for current project status"
+  documentation_structure: "Single source of truth principle - no duplicate information"
+  update_workflow: "Update .ai/context.yaml and docs/status/progress.yaml for status changes"

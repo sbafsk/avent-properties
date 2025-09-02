@@ -18,16 +18,16 @@ Avent Properties is a modern, luxury real estate platform targeting High Net Wor
 
 ## 📚 **Documentation & Getting Started**
 
-**🎯 For complete project documentation, start with `docs/README.md`**
+**🎯 For complete project documentation, start with [docs/index.md](docs/index.md)**
 
 This root README provides quick setup instructions. For comprehensive documentation including:
 - Current project status and progress
 - Development standards and guidelines
 - Business requirements and roadmap
-- MCP integration setup
 - Technical implementation details
+- Architecture overview
 
-**→ Go to `docs/README.md` for the complete picture**
+**→ Go to [docs/index.md](docs/index.md) for the complete picture**
 
 ## 🛠️ Tech Stack
 
