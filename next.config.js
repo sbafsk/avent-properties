@@ -52,6 +52,19 @@ const nextConfig = {
       punycode: false,
     }
 
+    // Optimize webpack cache for better performance
+    if (!dev) {
+      config.cache = {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename],
+        },
+        cacheDirectory: require('path').resolve(__dirname, '.next/cache'),
+        compression: 'gzip',
+        maxAge: 172800000, // 2 days
+      }
+    }
+
     // Optimize bundle size
     if (!dev && !isServer) {
       config.optimization.splitChunks = {

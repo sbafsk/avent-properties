@@ -8,6 +8,7 @@ export async function updateSession(request: NextRequest) {
         },
     })
 
+    // Create a minimal Supabase client for middleware that avoids realtime features
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -26,6 +27,23 @@ export async function updateSession(request: NextRequest) {
                     cookiesToSet.forEach(({ name, value, options }) =>
                         supabaseResponse.cookies.set(name, value, options)
                     )
+                },
+            },
+            // Completely disable realtime and other problematic features
+            global: {
+                headers: {
+                    'X-Client-Info': 'supabase-js-ssr',
+                },
+            },
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false,
+                detectSessionInUrl: false,
+            },
+            // Disable realtime features that cause Edge Runtime issues
+            realtime: {
+                params: {
+                    eventsPerSecond: 0,
                 },
             },
         }
