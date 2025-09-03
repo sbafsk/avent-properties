@@ -72,9 +72,9 @@ describe('InputField', () => {
   })
 
   it('supports different input types', () => {
-        const { rerender } = render(<InputField {...defaultProps} type="email" />)
+    const { rerender } = render(<InputField {...defaultProps} type="email" />)
     expect(screen.getByRole('textbox')).toHaveAttribute('type', 'email')
-    
+
     rerender(<InputField {...defaultProps} type="password" />)
     // Password inputs don't have 'textbox' role, they have 'textbox' role but are type="password"
     const passwordInput = screen.getByDisplayValue('')
