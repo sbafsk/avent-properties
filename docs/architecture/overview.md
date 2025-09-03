@@ -229,4 +229,26 @@ lib/
 
 ---
 
+## 🛠️ **Maintenance & Code Standards**
+
+### **Regular Cleanup Recommendations**
+- **Dependency Review**: Quarterly review for unused packages
+- **Legacy Pattern Monitoring**: Identify and remove outdated patterns
+- **Documentation Sync**: Keep docs synchronized with implementation
+- **Build Optimization**: Regular dependency updates with cleanup
+
+### **Code Standards**
+- **SOLID Principles**: Maintain throughout new development
+- **Established Patterns**: Use Repository, Validation Builder, Error Hierarchy
+- **Hook Organization**: Follow established hook structure
+- **GraphQL Implementation**: Keep clean and current with Apollo Server
+
+### **Performance Monitoring**
+- **Edge Runtime**: Monitor Supabase realtime-js Edge Runtime compatibility
+- **Bundle Size**: Track dependency impact on build size
+- **Build Times**: Monitor for optimization opportunities
+- **Test Coverage**: Maintain >80% coverage threshold
+
+---
+
 **This architecture provides a solid foundation for building and scaling the Avent Properties platform with optimal performance and maintainability.**
