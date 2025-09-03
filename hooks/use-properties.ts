@@ -45,6 +45,7 @@ interface UsePropertiesReturn {
   setPage: (page: number) => void;
   setItemsPerPage: (itemsPerPage: number) => void;
   refresh: () => void;
+  retryWithBackoff: (attempts?: number, maxAttempts?: number) => Promise<void>;
   clearError: () => void;
   reset: () => void;
 
@@ -128,7 +129,18 @@ export function useProperties(
         },
       });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch properties';
+      console.error('Properties fetch error:', err);
+
+      // Check if it's a fetch/network error
+      const isFetchError = err instanceof Error && (
+        err.message.includes('fetch failed') ||
+        err.message.includes('network') ||
+        err.message.includes('timeout')
+      );
+
+      const errorMessage = isFetchError
+        ? 'Network error: Unable to connect to our services. Please check your internet connection.'
+        : err instanceof Error ? err.message : 'Failed to fetch properties';
       dispatch({
         type: 'FETCH_PROPERTIES_ERROR',
         payload: errorMessage,
@@ -181,6 +193,25 @@ export function useProperties(
     fetchProperties();
   }, [fetchProperties]);
 
+  // Retry with exponential backoff
+  const retryWithBackoff = useCallback(async (attempts = 1, maxAttempts = 3) => {
+    if (attempts > maxAttempts) {
+      dispatch({
+        type: 'FETCH_PROPERTIES_ERROR',
+        payload: 'Maximum retry attempts reached. Please try again later.',
+      });
+      return;
+    }
+
+    try {
+      await fetchProperties();
+    } catch (err) {
+      // Wait before retrying with exponential backoff
+      const delay = Math.min(1000 * Math.pow(2, attempts - 1), 10000);
+      setTimeout(() => retryWithBackoff(attempts + 1, maxAttempts), delay);
+    }
+  }, [fetchProperties]);
+
   // Clear error
   const clearError = useCallback(() => {
     dispatch({ type: 'CLEAR_ERROR' });
@@ -218,6 +249,7 @@ export function useProperties(
     setPage,
     setItemsPerPage,
     refresh,
+    retryWithBackoff,
     clearError,
     reset,
     totalPages,

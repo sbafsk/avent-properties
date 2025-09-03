@@ -24,6 +24,22 @@ export async function createClient() {
                     }
                 },
             },
+            global: {
+                headers: {
+                    'X-Client-Info': 'supabase-js-ssr',
+                },
+            },
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false,
+                detectSessionInUrl: false,
+            },
+            // Disable realtime features that cause Edge Runtime issues
+            realtime: {
+                params: {
+                    eventsPerSecond: 0,
+                },
+            },
         }
     )
 }
