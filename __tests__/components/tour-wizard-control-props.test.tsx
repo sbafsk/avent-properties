@@ -186,11 +186,16 @@ describe('TourWizardControlProps', () => {
 
             // Step 2
             fireEvent.change(screen.getByTestId('date-picker'), {
-                target: { value: '2024-12-25' }
+                target: { value: '2025-12-25' }
             })
             fireEvent.change(screen.getByPlaceholderText('e.g., 10:00 AM, 2:00 PM'), {
                 target: { value: '10:00 AM' }
             })
+
+            // Select tour type
+            const tourTypeSelect = screen.getByRole('combobox')
+            fireEvent.change(tourTypeSelect, { target: { value: 'in-person' } })
+
             fireEvent.click(screen.getByText('Next'))
 
             // Step 3 - Fill required fields using more specific selectors
@@ -198,6 +203,8 @@ describe('TourWizardControlProps', () => {
             fireEvent.change(inputs[0], { target: { value: 'John' } }) // First name
             fireEvent.change(inputs[1], { target: { value: 'Doe' } }) // Last name
             fireEvent.change(inputs[2], { target: { value: 'john@example.com' } }) // Email
+            fireEvent.change(inputs[3], { target: { value: '+598 99 123 456' } }) // Phone
+            fireEvent.change(inputs[4], { target: { value: 'American' } }) // Nationality
             fireEvent.click(screen.getByText('Next'))
 
             // Step 4
@@ -232,7 +239,7 @@ describe('TourWizardControlProps', () => {
         const controlledFormData: TourWizardData = {
             propertyType: ['house'],
             location: ['la-barra'],
-            tourDate: new Date('2024-12-25'),
+            tourDate: new Date('2025-12-25'),
             tourTime: '2:00 PM',
             tourType: 'in-person',
             firstName: 'Jane',
@@ -428,11 +435,16 @@ describe('TourWizardControlProps', () => {
 
             // Step 2 - Fill required fields
             fireEvent.change(screen.getByTestId('date-picker'), {
-                target: { value: '2024-12-25' }
+                target: { value: '2025-12-25' }
             })
             fireEvent.change(screen.getByTestId('time-picker'), {
                 target: { value: '10:00 AM' }
             })
+
+            // Select tour type
+            const tourTypeSelect = screen.getByRole('combobox')
+            fireEvent.change(tourTypeSelect, { target: { value: 'in-person' } })
+
             fireEvent.click(screen.getByText('Next'))
 
             // Step 3 - Fill required fields
@@ -440,6 +452,8 @@ describe('TourWizardControlProps', () => {
             fireEvent.change(inputs[0], { target: { value: 'John' } }) // First name
             fireEvent.change(inputs[1], { target: { value: 'Doe' } }) // Last name
             fireEvent.change(inputs[2], { target: { value: 'john@example.com' } }) // Email
+            fireEvent.change(inputs[3], { target: { value: '+598 99 123 456' } }) // Phone
+            fireEvent.change(inputs[4], { target: { value: 'American' } }) // Nationality
             fireEvent.click(screen.getByText('Next'))
 
             // Step 4 - Fill required fields

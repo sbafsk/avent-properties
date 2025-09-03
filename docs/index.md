@@ -10,7 +10,7 @@ Avent Properties is a modern, luxury real estate platform targeting High Net Wor
 - **Property Listings**: Browse and filter luxury properties with advanced search
 - **Tour Reservations**: Book premium tours with 10% deposit system
 - **Multi-Role Access**: Client, Agency, and Admin dashboards
-- **GraphQL API**: Direct Apollo Server + Supabase integration
+- **GraphQL API**: Apollo Server + Supabase SDK integration
 - **Modern UI**: Glassmorphism design with gold accents
 - **Responsive Design**: Mobile-first approach
 
@@ -22,16 +22,16 @@ Avent Properties is a modern, luxury real estate platform targeting High Net Wor
 - **Frontend**: Next.js 15 + TypeScript + React 19
 - **Styling**: TailwindCSS + shadcn/ui + Radix UI
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
-- **API**: Direct Apollo Server + Supabase SDK
+- **API**: Apollo Server + Supabase SDK
 - **State Management**: Redux Toolkit + React Query
 - **Forms**: React Hook Form + Zod validation
 - **Testing**: Jest + React Testing Library + Playwright
 - **Deployment**: Vercel (MVP) → AWS (future)
 
 ### **GraphQL Architecture**
-Our GraphQL implementation uses a **direct Apollo Server + Supabase SDK approach** that provides:
+Our GraphQL implementation uses **Apollo Server + Supabase SDK** that provides:
 
-- **Direct Database Access**: No GraphQL-to-GraphQL overhead
+- **Direct Database Access**: Supabase SDK for efficient data operations
 - **Type Safety**: Full TypeScript support with generated Supabase types
 - **Performance**: Optimized queries with efficient joins
 - **Maintainability**: Clean, standard Apollo patterns
@@ -53,7 +53,6 @@ Our GraphQL implementation uses a **direct Apollo Server + Supabase SDK approach
 
 ### **Implementation Guides**
 - **`docs/guides/apollo_supabase_integration.md`** - GraphQL implementation guide
-- **`docs/guides/graphql-migration-plan.md`** - Migration from hybrid to direct architecture
 - **`docs/guides/implementation-checklist.md`** - Quick implementation steps
 
 ---
@@ -76,7 +75,7 @@ Our GraphQL implementation uses a **direct Apollo Server + Supabase SDK approach
 
 ### **✅ Completed Features**
 - **MVP Core**: Property listings, user authentication, basic UI
-- **GraphQL API**: Direct Apollo + Supabase integration
+- **GraphQL API**: Apollo Server + Supabase SDK integration
 - **Testing Suite**: Comprehensive test coverage
 - **Documentation**: AI-friendly documentation structure
 - **MCP Integration**: AI development assistance operational
@@ -110,15 +109,15 @@ Our GraphQL implementation uses a **direct Apollo Server + Supabase SDK approach
 
 ---
 
-## 🌟 **Key Benefits of New Architecture**
+## 🌟 **Key Benefits of Current Architecture**
 
-| **Before (Hybrid)** | **After (Direct)** |
-|---------------------|-------------------|
-| ❌ Complex routing logic | ✅ Simple, direct resolvers |
-| ❌ GraphQL-to-GraphQL overhead | ✅ Direct database calls |
-| ❌ Performance bottlenecks | ✅ Optimized queries |
-| ❌ Hard to maintain | ✅ Standard Apollo patterns |
-| ❌ Type safety issues | ✅ Full TypeScript support |
+| **Aspect** | **Benefit** |
+|------------|-------------|
+| **Performance** | Direct database access via Supabase SDK |
+| **Type Safety** | Full TypeScript support with generated types |
+| **Maintainability** | Standard Apollo patterns, clean code |
+| **Scalability** | Easy to extend with new resolvers |
+| **Testing** | Comprehensive test coverage |
 
 ---
 

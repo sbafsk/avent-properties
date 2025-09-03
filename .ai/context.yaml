@@ -8,21 +8,21 @@ technology:
   frontend: "Next.js 15 + React 19 + TypeScript"
   styling: "TailwindCSS + shadcn/ui + Radix UI"
   backend: "Supabase (PostgreSQL + Auth + Storage)"
-  api: "Direct Apollo Server + Supabase SDK"
+  api: "Apollo Server + Supabase SDK"
   state: "Redux Toolkit + React Query"
   forms: "React Hook Form + Zod validation"
   testing: "Jest + React Testing Library + Playwright"
   deployment: "Vercel (MVP) → AWS (future)"
 
 architecture:
-  pattern: "Direct Apollo + Supabase Architecture"
-  description: "Clean, direct GraphQL implementation with Apollo Server using Supabase SDK"
+  pattern: "Apollo Server + Supabase SDK Architecture"
+  description: "Clean, standard GraphQL implementation with Apollo Server using Supabase SDK"
   benefits:
-    - "No GraphQL-to-GraphQL overhead"
+    - "Efficient database access via Supabase SDK"
     - "Full TypeScript support with generated types"
-    - "Direct database access for optimal performance"
     - "Standard Apollo patterns for maintainability"
     - "Easy to extend with new resolvers"
+    - "Enterprise-grade SOLID principles"
 
 current_status:
   phase: "Tour Reservation System Development"
@@ -43,6 +43,7 @@ development_standards:
   - "Jest testing with >80% coverage"
   - "Conventional commit messages"
   - "Pre-commit quality gates"
+  - "SOLID principles implementation"
 
 documentation:
   structure: "AI-friendly single source of truth"
@@ -52,6 +53,13 @@ documentation:
 graphql:
   endpoint: "/api/graphql"
   schema: "Comprehensive property and reservation types"
-  resolvers: "Direct Supabase SDK integration"
+  resolvers: "Supabase SDK integration"
   authentication: "JWT-based with role-based access"
   business_logic: "Comprehensive validation and rules"
+
+patterns:
+  - "Repository Pattern for data access"
+  - "Validation Builder Pattern for forms"
+  - "Custom Error Hierarchy following SOLID principles"
+  - "Strategy Pattern for validation rules"
+  - "Factory Pattern for component creation"

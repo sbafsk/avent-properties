@@ -1,5 +1,4 @@
 import { ApolloServer } from '@apollo/server'
-import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { typeDefs } from '@/lib/graphql/schema'
 import { resolvers } from '@/lib/graphql/resolvers'
 import { createContext } from '@/lib/graphql/context'
@@ -19,16 +18,69 @@ const server = new ApolloServer({
 	},
 })
 
-const handler = startServerAndCreateNextHandler(server, {
-	context: async (req) => {
-		return createContext({ req })
-	},
-})
+// Initialize the server
+let serverStarted = false
+async function ensureServerStarted() {
+	if (!serverStarted) {
+		await server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests()
+		serverStarted = true
+	}
+}
 
 export async function GET(request: NextRequest) {
-	return handler(request)
+	await ensureServerStarted()
+
+	const url = new URL(request.url)
+	const query = url.searchParams.get('query')
+	const variables = url.searchParams.get('variables')
+	const operationName = url.searchParams.get('operationName')
+
+	if (!query) {
+		return new Response('Query parameter is required', { status: 400 })
+	}
+
+	try {
+		const context = await createContext({ req: request })
+		const result = await server.executeOperation(
+			{
+				query,
+				variables: variables ? JSON.parse(variables) : undefined,
+				operationName: operationName || undefined,
+			},
+			{ contextValue: context }
+		)
+
+		return Response.json(result)
+	} catch (error) {
+		console.error('GraphQL execution error:', error)
+		return new Response('Internal Server Error', { status: 500 })
+	}
 }
 
 export async function POST(request: NextRequest) {
-	return handler(request)
+	await ensureServerStarted()
+
+	try {
+		const body = await request.json()
+		const { query, variables, operationName } = body
+
+		if (!query) {
+			return new Response('Query is required in request body', { status: 400 })
+		}
+
+		const context = await createContext({ req: request })
+		const result = await server.executeOperation(
+			{
+				query,
+				variables,
+				operationName,
+			},
+			{ contextValue: context }
+		)
+
+		return Response.json(result)
+	} catch (error) {
+		console.error('GraphQL execution error:', error)
+		return new Response('Internal Server Error', { status: 500 })
+	}
 }

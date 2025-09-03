@@ -7,7 +7,7 @@ A premium coastal properties platform in Uruguay, designed for Dubai investors a
 - **Property Listings**: Curated luxury properties with detailed information
 - **Virtual Tours**: Interactive property exploration
 - **Reservation System**: 10% deposit booking with tour scheduling
-- **GraphQL API**: Direct Apollo Server + Supabase integration
+- **GraphQL API**: Apollo Server + Supabase SDK integration
 - **Authentication**: JWT-based with role-based access control
 - **Responsive Design**: Mobile-first approach with modern UI
 
@@ -16,7 +16,7 @@ A premium coastal properties platform in Uruguay, designed for Dubai investors a
 - **Frontend**: Next.js 15 + TypeScript + React 19
 - **Styling**: TailwindCSS + shadcn/ui + Radix UI
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
-- **API**: Direct Apollo Server + Supabase SDK
+- **API**: Apollo Server + Supabase SDK
 - **State Management**: Redux Toolkit + React Query
 - **Forms**: React Hook Form + Zod validation
 - **Testing**: Jest + React Testing Library + Playwright
@@ -90,7 +90,7 @@ yarn start
 
 ## 🌟 **Key Benefits**
 
-- **Direct Database Access**: No GraphQL-to-GraphQL overhead
+- **Efficient Database Access**: Supabase SDK for optimized queries
 - **Type Safety**: Full TypeScript support with generated Supabase types
 - **Performance**: Optimized queries with efficient joins
 - **Maintainability**: Clean, standard Apollo patterns
@@ -100,14 +100,14 @@ yarn start
 
 Access your GraphQL API at `/api/graphql` with:
 - **Schema**: Comprehensive property and reservation types
-- **Resolvers**: Direct Supabase SDK integration
+- **Resolvers**: Supabase SDK integration
 - **Authentication**: JWT-based with role-based access
 - **Business Logic**: Comprehensive validation and rules
 
 ## 📊 **Current Status**
 
 - **MVP Features**: ✅ **COMPLETED** - Core functionality operational
-- **GraphQL Migration**: ✅ **COMPLETED** - Direct Apollo + Supabase integration
+- **GraphQL API**: ✅ **COMPLETED** - Apollo Server + Supabase SDK integration
 - **MCP Integration**: ✅ **COMPLETED** - AI development assistance operational
 - **Testing Suite**: ✅ **COMPLETED** - Comprehensive test coverage
 - **Documentation**: ✅ **COMPLETED** - AI-friendly documentation structure

@@ -184,10 +184,10 @@ yarn type-check       # TypeScript type checking
 ## 🔧 **GraphQL Development**
 
 ### **Current Architecture**
-- **Direct Apollo Server + Supabase SDK**
-- **No hybrid routing or complexity**
-- **Full TypeScript support**
+- **Apollo Server + Supabase SDK**
 - **Standard Apollo patterns**
+- **Full TypeScript support**
+- **Generated Supabase types**
 
 ### **Key Files**
 ```
@@ -201,7 +201,7 @@ lib/graphql/
 ```
 
 ### **Development Guidelines**
-- Use direct Supabase SDK calls in resolvers
+- Use Supabase SDK calls in resolvers
 - Maintain full TypeScript coverage
 - Follow standard Apollo patterns
 - Write comprehensive tests
@@ -211,34 +211,32 @@ lib/graphql/
 **🎯 Complete documentation is organized in the `/docs` folder**
 
 ### **Quick Navigation**
-- **`docs/README.md`** - **COMPLETE PROJECT OVERVIEW** (Start here!)
+- **`docs/index.md`** - **COMPLETE PROJECT OVERVIEW** (Start here!)
 - **`docs/status/progress.yaml`** - Current project status and progress
-- **`docs/architecture/overview.md`** - Quick navigation guide
+- **`docs/architecture/overview.md`** - Technical architecture details
 - **`docs/guides/`** - Implementation guides
 
 ### **For AI Assistants & Developers**
 - **`rules/`** - Development standards and AI training materials
 - **`docs/`** - Project status and implementation guides
 
-**→ See `docs/README.md` for complete documentation structure and navigation**
+**→ See `docs/index.md` for complete documentation structure and navigation**
 
 ## 🤖 **AI Development Assistance**
 
 ### **MCP Integration**
-We use Model Context Protocol (MCP) to enhance AI development assistance with 2-server setup (docs + rules).
+We use Model Context Protocol (MCP) to enhance AI development assistance with 4-server setup (docs + rules).
 
-**→ See `docs/README.md` for complete MCP setup and testing instructions**
+**→ See `docs/index.md` for complete MCP setup and testing instructions**
 
 ## 🤝 **Contributing**
 
-1. **Follow coding standards** in `rules/RULES.md`
+1. **Follow coding standards** in `standards/coding.md`
 2. **Write tests** for new features
 3. **Use conventional commit messages**
 4. **Create feature branches** from `dev`
 5. **Submit pull requests** for review
 6. **Update documentation** when making changes
-
-**→ See `docs/MAINTENANCE_GUIDE.md` for documentation update workflow**
 
 ## 📄 **License**
 
@@ -253,26 +251,26 @@ Private project - All rights reserved
 ## 🔄 **Documentation Status**
 
 - **Last Updated**: January 2025
-- **Documentation**: ✅ **CONSOLIDATED** - Single source of truth in `docs/README.md`
+- **Documentation**: ✅ **CONSOLIDATED** - Single source of truth in `docs/index.md`
 - **MCP Integration**: ✅ **COMPLETE** - AI development assistance operational
 - **Next Review**: Monthly or when major changes occur
 
-**📚 For complete documentation, start with `docs/README.md`**
+**📚 For complete documentation, start with `docs/index.md`**
 
 ---
 
 ## 🎯 **Quick Start**
 
 1. **Read this file** for project overview and setup
-2. **Go to `docs/README.md`** for complete documentation
+2. **Go to `docs/index.md`** for complete documentation
 3. **Check `docs/status/progress.yaml`** for current status
-4. **Follow `docs/MAINTENANCE_GUIDE.md`** for keeping docs updated
+4. **Follow setup instructions** above
 
 ---
 
 ## 🚀 **Recent Achievement**
 
-**GraphQL Migration Complete!** ✅ We've successfully migrated from a complex hybrid architecture to a clean, direct Apollo + Supabase implementation with full TypeScript support and comprehensive testing.
+**SOLID Principles & Enterprise Architecture Complete!** ✅ We've successfully implemented enterprise-grade patterns including Repository Pattern, Validation Builder Pattern, and Custom Error Hierarchy following SOLID principles.
 
 ---
 

@@ -6,29 +6,30 @@ You are assisting with **Avent Properties**, a luxury real estate platform in Ur
 
 ## 🏗️ **Current Architecture**
 
-**Direct Apollo Server + Supabase SDK Integration**
-- **GraphQL**: Apollo Server with direct Supabase SDK calls
+**Apollo Server + Supabase SDK Integration**
+- **GraphQL**: Apollo Server with Supabase SDK calls
 - **Database**: PostgreSQL via Supabase with Row Level Security
 - **Authentication**: JWT-based with role-based access control
 - **Type Safety**: Full TypeScript support with generated Supabase types
 
 ## 🚀 **Key Benefits of Current Architecture**
 
-| **Before (Hybrid)** | **After (Direct)** |
-|---------------------|-------------------|
-| ❌ Complex routing logic | ✅ Simple, direct resolvers |
-| ❌ GraphQL-to-GraphQL overhead | ✅ Direct database calls |
-| ❌ Performance bottlenecks | ✅ Optimized queries |
-| ❌ Hard to maintain | ✅ Standard Apollo patterns |
-| ❌ Type safety issues | ✅ Full TypeScript support |
+| **Aspect** | **Benefit** |
+|------------|-------------|
+| **Performance** | Efficient database access via Supabase SDK |
+| **Type Safety** | Full TypeScript support with generated types |
+| **Maintainability** | Standard Apollo patterns, clean code |
+| **Scalability** | Easy to extend with new resolvers |
+| **Testing** | Comprehensive test coverage |
 
 ## 📊 **Current Status**
 
 - **MVP Features**: ✅ **COMPLETED** - Core functionality operational
-- **GraphQL Migration**: ✅ **COMPLETED** - Direct Apollo + Supabase integration
+- **GraphQL API**: ✅ **COMPLETED** - Apollo Server + Supabase SDK integration
 - **Testing Suite**: ✅ **COMPLETED** - Comprehensive test coverage
 - **Documentation**: ✅ **COMPLETED** - AI-friendly documentation structure
 - **MCP Integration**: ✅ **COMPLETED** - AI development assistance operational
+- **SOLID Principles**: ✅ **COMPLETED** - Enterprise architecture patterns implemented
 
 ## 🎯 **Current Priorities**
 
@@ -46,7 +47,7 @@ You are assisting with **Avent Properties**, a luxury real estate platform in Ur
 - **Formatting**: Prettier configuration
 
 ### **GraphQL Development**
-- **Resolvers**: Direct Supabase SDK calls
+- **Resolvers**: Supabase SDK calls
 - **Type Safety**: Use generated `Database` types
 - **Authentication**: JWT validation in context
 - **Error Handling**: Proper GraphQL error responses
@@ -79,20 +80,21 @@ lib/graphql/
 
 ## 🚫 **What NOT to Do**
 
-- ❌ Don't reference the old hybrid GraphQL architecture
-- ❌ Don't suggest complex routing or hybrid approaches
+- ❌ Don't reference hybrid GraphQL architecture
+- ❌ Don't suggest complex routing approaches
 - ❌ Don't ignore TypeScript type safety
 - ❌ Don't skip testing for new features
 - ❌ Don't create duplicate documentation
 
 ## ✅ **What TO Do**
 
-- ✅ Use direct Supabase SDK calls in resolvers
+- ✅ Use Supabase SDK calls in resolvers
 - ✅ Maintain full TypeScript coverage
 - ✅ Follow standard Apollo patterns
 - ✅ Write comprehensive tests
 - ✅ Update documentation when making changes
 - ✅ Use the new `Database` types from `lib/database.types.ts`
+- ✅ Follow SOLID principles and established patterns
 
 ## 🔍 **When in Doubt**
 
@@ -101,6 +103,7 @@ lib/graphql/
 3. **Use generated types** from `lib/database.types.ts`
 4. **Follow Apollo Server best practices**
 5. **Maintain clean, maintainable code**
+6. **Apply SOLID principles** from `standards/patterns.md`
 
 ## 📞 **Getting Help**
 
@@ -108,7 +111,8 @@ lib/graphql/
 - **Architecture**: Review `docs/architecture/overview.md`
 - **Status**: Check `docs/status/progress.yaml`
 - **Standards**: Refer to `standards/coding.md`
+- **Patterns**: Review `standards/patterns.md`
 
 ---
 
-**Remember**: We've moved from a complex hybrid architecture to a clean, direct Apollo + Supabase implementation. Keep it simple, maintainable, and type-safe! 🚀
+**Remember**: We have a clean, maintainable Apollo Server + Supabase SDK implementation with enterprise-grade SOLID principles. Keep it simple, maintainable, and type-safe! 🚀

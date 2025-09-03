@@ -16,7 +16,7 @@
 ### **✅ Technical Infrastructure**
 - **Frontend**: Next.js 15 + React 19 + TypeScript
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
-- **API**: Direct Apollo Server + Supabase SDK
+- **API**: Apollo Server + Supabase SDK
 - **Testing**: Comprehensive test suite with >80% coverage
 - **Documentation**: AI-friendly single source of truth
 
@@ -46,7 +46,7 @@
 - **Admin Console**: Financial oversight, user management
 
 ### **4. Technical Excellence**
-- **Direct Database Access**: No GraphQL-to-GraphQL overhead
+- **Efficient Database Access**: Supabase SDK for optimized queries
 - **Type Safety**: Full TypeScript support with generated types
 - **Performance**: Optimized queries with efficient joins
 - **Maintainability**: Clean, standard Apollo patterns
@@ -62,7 +62,7 @@
 1. **Luxury Focus**: Premium properties and experiences
 2. **Technology**: Modern, responsive platform
 3. **Security**: JWT authentication with role-based access
-4. **Performance**: Direct database integration for speed
+4. **Performance**: Efficient database integration for speed
 5. **User Experience**: Intuitive, mobile-first design
 
 ## 🎯 **Success Metrics**
@@ -122,14 +122,14 @@
 ## 🔧 **Technical Architecture**
 
 ### **Current Implementation**
-- **GraphQL**: Direct Apollo Server + Supabase SDK
+- **GraphQL**: Apollo Server + Supabase SDK
 - **Database**: PostgreSQL with Row Level Security
 - **Authentication**: JWT-based with role management
 - **Frontend**: React 19 with TypeScript
 - **Styling**: TailwindCSS with custom luxury theme
 
 ### **Key Benefits**
-- **Performance**: Direct database access, no overhead
+- **Performance**: Efficient database access via Supabase SDK
 - **Maintainability**: Standard Apollo patterns, clean code
 - **Type Safety**: Full TypeScript coverage
 - **Scalability**: Easy to extend and modify
@@ -253,7 +253,7 @@
 ## 📊 **Current Status Summary**
 
 - **Platform**: ✅ **OPERATIONAL** - Core functionality complete
-- **GraphQL API**: ✅ **COMPLETE** - Direct Apollo + Supabase integration
+- **GraphQL API**: ✅ **COMPLETE** - Apollo Server + Supabase SDK integration
 - **Testing**: ✅ **COMPLETE** - Comprehensive test coverage
 - **Documentation**: ✅ **COMPLETE** - AI-friendly structure
 - **Next Milestone**: Tour Reservation System MVP (Jan 30, 2025)

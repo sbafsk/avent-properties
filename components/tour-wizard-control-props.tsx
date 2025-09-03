@@ -9,6 +9,8 @@ import { DatePicker } from "./date-picker"
 import { MultiSelect } from "./ui/multi-select"
 import { PROPERTY_TYPE_OPTIONS, LOCATION_OPTIONS, TOUR_TYPE_OPTIONS } from "./tour-wizard-constants"
 import { ChevronLeft, ChevronRight, Check, MapPin, Calendar, User, Settings, CheckCircle } from "lucide-react"
+import { createStep1Validator, createStep2Validator, createStep3Validator, createStep4Validator } from "@/lib/validation/tour-wizard-validator"
+import { TourWizardValidationError } from "@/lib/errors"
 
 // Types
 export interface TourWizardData {
@@ -181,32 +183,39 @@ export function TourWizardControlProps({
         }
     }, [formData, onSubmit, totalSteps, updateSubmitting, updateErrors, updateCurrentStep])
 
-    // Validation
+    // Validation using the new validation system
     const validateStep = useCallback((step: number): boolean => {
-        const newErrors: Record<string, string> = {}
+        let validator: ReturnType<typeof createStep1Validator> | ReturnType<typeof createStep2Validator> | ReturnType<typeof createStep3Validator> | ReturnType<typeof createStep4Validator>
 
         switch (step) {
             case 1:
-                if (!formData.propertyType.length) newErrors.propertyType = "Property type is required"
-                if (!formData.location.length) newErrors.location = "Location is required"
+                validator = createStep1Validator()
                 break
             case 2:
-                if (!formData.tourDate) newErrors.tourDate = "Tour date is required"
-                if (!formData.tourTime) newErrors.tourTime = "Tour time is required"
+                validator = createStep2Validator()
                 break
             case 3:
-                if (!formData.firstName) newErrors.firstName = "First name is required"
-                if (!formData.lastName) newErrors.lastName = "Last name is required"
-                if (!formData.email) newErrors.email = "Email is required"
+                validator = createStep3Validator()
                 break
             case 4:
-                if (!formData.budget) newErrors.budget = "Budget is required"
-                if (!formData.timeline) newErrors.timeline = "Timeline is required"
+                validator = createStep4Validator()
                 break
+            default:
+                return true
         }
 
-        updateErrors(newErrors)
-        return Object.keys(newErrors).length === 0
+        try {
+            const validationResult = validator.validateStep(step, formData)
+
+            updateErrors(validationResult.errors)
+            return validationResult.isValid
+        } catch (error) {
+            if (error instanceof TourWizardValidationError) {
+                const newErrors = { submit: error.message }
+                updateErrors(newErrors)
+            }
+            return false
+        }
     }, [formData, updateErrors])
 
     // Step content components

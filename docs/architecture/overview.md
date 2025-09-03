@@ -2,11 +2,11 @@
 
 ## 🏗️ **Architecture Overview**
 
-Avent Properties implements a **direct Apollo Server + Supabase SDK architecture** that provides optimal performance, maintainability, and type safety.
+Avent Properties implements an **Apollo Server + Supabase SDK architecture** that provides optimal performance, maintainability, and type safety.
 
-## 🔄 **Direct GraphQL Architecture**
+## 🔄 **GraphQL Architecture**
 
-Our GraphQL implementation follows a clean, direct approach:
+Our GraphQL implementation follows a clean, standard Apollo approach:
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
@@ -19,7 +19,7 @@ Our GraphQL implementation follows a clean, direct approach:
 ```
 
 ### **Key Benefits**
-- **Direct Database Access**: No GraphQL-to-GraphQL overhead
+- **Efficient Database Access**: Supabase SDK for optimized queries
 - **Type Safety**: Full TypeScript support with generated Supabase types
 - **Performance**: Optimized queries with efficient joins
 - **Maintainability**: Clean, standard Apollo patterns
@@ -27,9 +27,9 @@ Our GraphQL implementation follows a clean, direct approach:
 
 ## 🚀 **Performance Features**
 
-### **1. Direct Query Optimization**
-- **Eliminated Overhead**: No intermediate GraphQL layer
-- **Efficient Joins**: Direct database queries with proper indexing
+### **1. Query Optimization**
+- **Efficient Queries**: Supabase SDK handles database optimization
+- **Proper Joins**: Direct database queries with proper indexing
 - **Connection Pooling**: Supabase handles database connections
 
 ### **2. Type Safety & Validation**
@@ -220,7 +220,7 @@ lib/
 
 | **Aspect** | **Benefit** |
 |------------|-------------|
-| **Performance** | Direct database access, no overhead |
+| **Performance** | Efficient database access via Supabase SDK |
 | **Maintainability** | Standard Apollo patterns, clean code |
 | **Type Safety** | Full TypeScript coverage |
 | **Scalability** | Easy to extend and modify |

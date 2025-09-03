@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '../database.types'
+import { NextRequest } from 'next/server'
 
 export interface Context {
   supabase: SupabaseClient<Database>
@@ -11,8 +12,8 @@ export interface Context {
   }
 }
 
-export async function createContext({ req }: { req: { headers: { authorization?: string } } }): Promise<Context> {
-  const authHeader = req.headers.authorization
+export async function createContext({ req }: { req: NextRequest }): Promise<Context> {
+  const authHeader = req.headers.get('authorization')
   const token = authHeader?.replace('Bearer ', '')
 
   // Create Supabase client
