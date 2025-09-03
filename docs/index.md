@@ -44,6 +44,7 @@ Our GraphQL implementation uses **Apollo Server + Supabase SDK** that provides:
 ### **Core Documentation**
 - **`docs/index.md`** ← **You are here** - Complete project overview
 - **`docs/status/progress.yaml`** - Current project status and progress
+- **`docs/status/technical-debt.md`** - Technical debt tracking and known issues
 - **`docs/architecture/overview.md`** - Detailed technical architecture
 - **`docs/guides/setup.md`** - Development environment setup
 

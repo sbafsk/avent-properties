@@ -84,6 +84,15 @@ technical_status:
   deployment: "Vercel MVP - Operational"
   architecture: "Enterprise-grade with SOLID principles and design patterns"
 
+technical_debt:
+  - issue: "React DOM fill attribute warning in PropertyCard tests"
+    description: "Console error: 'Received true for a non-boolean attribute fill'"
+    location: "components/property/property-card.tsx, __tests__/components/property-card.test.tsx"
+    impact: "Low - Test warnings, no functional impact"
+    status: "Identified - Requires investigation of fill prop handling"
+    priority: "Low - Can be addressed in future cleanup"
+    notes: "Issue persists despite fixing fill prop usage. May be related to Lucide React icons or Next.js Image component interaction."
+
 architecture:
   current: "Apollo Server + Supabase SDK + SOLID Principles"
   patterns_implemented:
