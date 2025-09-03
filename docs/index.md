@@ -52,10 +52,9 @@ Our GraphQL implementation uses **Apollo Server + Supabase SDK** that provides:
 - **`docs/business/SALES_TEAM_GUIDE.md`** - Sales strategy and market positioning
 
 ### **Implementation Guides**
-- **`docs/guides/apollo_supabase_integration.md`** - GraphQL implementation guide
+- **`docs/guides/apollo-supabase-core.md`** - Apollo Server + Supabase SDK integration
 - **`docs/guides/implementation-checklist.md`** - Quick implementation steps
-- **`docs/guides/shadcn-integration-plan.md`** - shadcn/ui integration strategy
-- **`docs/guides/shadcn-implementation-examples.md`** - Practical implementation examples
+- **`docs/guides/shadcn-ui.md`** - Complete shadcn/ui integration strategy, examples, and best practices
 
 ---
 
@@ -65,7 +64,7 @@ Our GraphQL implementation uses **Apollo Server + Supabase SDK** that provides:
 1. **Setup**: Follow [docs/guides/setup.md](docs/guides/setup.md)
 2. **Architecture**: Review [docs/architecture/overview.md](docs/architecture/overview.md)
 3. **GraphQL**: Study [docs/guides/apollo_supabase_integration.md](docs/guides/apollo_supabase_integration.md)
-4. **UI Components**: Implement [docs/guides/shadcn-integration-plan.md](docs/guides/shadcn-integration-plan.md)
+4. **UI Components**: Implement [docs/guides/shadcn-ui.md](docs/guides/shadcn-ui.md)
 
 ### **For Business Stakeholders**
 1. **Overview**: Read [docs/business/PRODUCT_OWNER_GUIDE.md](docs/business/PRODUCT_OWNER_GUIDE.md)
