@@ -1,123 +1,138 @@
-import React from "react";
-import { render, screen, fireEvent, act } from "@testing-library/react";
-import { PropertyCard } from "@/components/property-card";
-import { FavoritesProvider } from "@/hooks/favorites-context";
-
-// Mock the useFavorites hook
-jest.mock("@/hooks/use-favorites", () => ({
-  useFavorites: () => ({
-    isFavorite: jest.fn(() => false),
-    toggleFavorite: jest.fn(),
-  }),
-}));
+import React from 'react'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { PropertyCard } from '@/components/property/property-card'
 
 // Mock Next.js Image component
-jest.mock("next/image", () => {
-  return function MockImage({ src, alt, ...props }: any) {
-    return <img src={src} alt={alt} {...props} />;
-  };
-});
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: ({ src, alt, ...props }: any) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} {...props} />
+  }
+}))
 
 const mockProperty = {
-  id: "1",
-  title: "Luxury Beach House",
-  city: "Punta del Este",
-  neighborhood: "La Barra",
+  id: '1',
+  title: 'Luxury Beach Villa',
+  description: 'Beautiful villa with ocean view',
   price: 1500000,
-  currency: "USD",
+  currency: 'USD',
+  location: 'Punta del Este',
   bedrooms: 4,
   bathrooms: 3,
-  area_m2: 250,
-  imageUrl: "/test-image.jpg",
-  property_type: "House",
-  featured: false,
-};
+  areaM2: 250,
+  images: ['/image1.jpg', '/image2.jpg'],
+  amenities: ['Pool', 'Garden', 'Ocean View', 'Garage']
+}
 
-// Helper function to render with FavoritesProvider
-const renderWithProvider = async (component: React.ReactElement) => {
-  let result: any;
-  await act(async () => {
-    result = render(
-      <FavoritesProvider>
-        {component}
-      </FavoritesProvider>
-    );
-  });
-  return result;
-};
+describe('PropertyCard', () => {
+  it('renders property information correctly', () => {
+    render(<PropertyCard property={mockProperty} />)
 
-describe("PropertyCard", () => {
-  it("renders property information correctly", async () => {
-    await renderWithProvider(<PropertyCard {...mockProperty} />);
-    
-    expect(screen.getByText("Luxury Beach House")).toBeInTheDocument();
-    expect(screen.getByText("Punta del Este, La Barra")).toBeInTheDocument();
-    expect(screen.getByText("$1,500,000")).toBeInTheDocument();
-    expect(screen.getByText("House")).toBeInTheDocument();
-  });
+    expect(screen.getByText('Luxury Beach Villa')).toBeInTheDocument()
+    expect(screen.getByText('Punta del Este')).toBeInTheDocument()
+    expect(screen.getByText('$1,500,000.00')).toBeInTheDocument()
+    expect(screen.getByText('4 beds')).toBeInTheDocument()
+    expect(screen.getByText('3 baths')).toBeInTheDocument()
+    expect(screen.getByText('250m²')).toBeInTheDocument()
+  })
 
-  it("renders property specifications", async () => {
-    await renderWithProvider(<PropertyCard {...mockProperty} />);
-    
-    expect(screen.getByText("4")).toBeInTheDocument(); // bedrooms
-    expect(screen.getByText("3")).toBeInTheDocument(); // bathrooms
-    expect(screen.getByText("250m²")).toBeInTheDocument(); // area
-  });
+  it('displays amenities correctly', () => {
+    render(<PropertyCard property={mockProperty} />)
 
-  it("shows featured badge when property is featured", async () => {
-    await renderWithProvider(<PropertyCard {...mockProperty} featured />);
-    
-    expect(screen.getByText("Featured")).toBeInTheDocument();
-  });
+    expect(screen.getByText('Pool')).toBeInTheDocument()
+    expect(screen.getByText('Garden')).toBeInTheDocument()
+    expect(screen.getByText('Ocean View')).toBeInTheDocument()
+    expect(screen.getByText('+1 more')).toBeInTheDocument()
+  })
 
-  it("does not show featured badge when property is not featured", async () => {
-    await renderWithProvider(<PropertyCard {...mockProperty} featured={false} />);
-    
-    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
-  });
+  it('handles bookmark action', () => {
+    const onBookmark = jest.fn()
+    render(<PropertyCard property={mockProperty} onBookmark={onBookmark} />)
 
-  it("calls onViewDetails when view details button is clicked", async () => {
-    const mockOnViewDetails = jest.fn();
-    await renderWithProvider(<PropertyCard {...mockProperty} onViewDetails={mockOnViewDetails} />);
-    
-    fireEvent.click(screen.getByText("View Details"));
-    expect(mockOnViewDetails).toHaveBeenCalledWith("1");
-  });
+    const bookmarkButton = screen.getByRole('button', { name: /add bookmark/i })
+    fireEvent.click(bookmarkButton)
 
+    expect(onBookmark).toHaveBeenCalledWith(mockProperty)
+  })
 
+  it('handles select action', () => {
+    const onSelect = jest.fn()
+    render(<PropertyCard property={mockProperty} onSelect={onSelect} />)
 
-  it("renders heart icon for favorites", async () => {
-    await renderWithProvider(<PropertyCard {...mockProperty} />);
-    
-    // The heart icon should be present (it's a button with Heart icon)
-    const heartButton = screen.getByRole("button", { name: "Add to favorites" });
-    expect(heartButton).toBeInTheDocument();
-  });
+    const selectButton = screen.getByRole('button', { name: /select property/i })
+    fireEvent.click(selectButton)
 
-  it("handles missing optional properties gracefully", async () => {
-    const propertyWithoutOptionals = {
-      ...mockProperty,
-      bedrooms: undefined,
-      bathrooms: undefined,
-      area_m2: undefined,
-      neighborhood: undefined,
-    };
-    
-    await renderWithProvider(<PropertyCard {...propertyWithoutOptionals} />);
-    
-    expect(screen.getByText("Luxury Beach House")).toBeInTheDocument();
-    expect(screen.getByText("Punta del Este")).toBeInTheDocument(); // No neighborhood
-    expect(screen.getByText("$1,500,000")).toBeInTheDocument();
-  });
+    expect(onSelect).toHaveBeenCalledWith(mockProperty)
+  })
 
-  it("applies custom className", async () => {
-    const { container } = await renderWithProvider(
-      <PropertyCard {...mockProperty} className="custom-class" />
-    );
-    
-    const card = container.querySelector(".custom-class");
-    expect(card).toBeInTheDocument();
-  });
-});
+  it('shows featured badge when variant is featured', () => {
+    render(<PropertyCard property={mockProperty} variant="featured" />)
+
+    expect(screen.getByText('Featured')).toBeInTheDocument()
+  })
+
+  it('applies selected state styling', () => {
+    render(<PropertyCard property={mockProperty} isSelected={true} onSelect={jest.fn()} />)
+
+    const selectButton = screen.getByRole('button', { name: /deselect property/i })
+    expect(selectButton).toHaveClass('bg-primary')
+  })
+
+  it('displays property image with alt text', () => {
+    render(<PropertyCard property={mockProperty} />)
+
+    const image = screen.getByAltText('Luxury Beach Villa')
+    expect(image).toBeInTheDocument()
+    expect(image).toHaveAttribute('src', '/image1.jpg')
+  })
+
+  it('shows image navigation when multiple images exist', () => {
+    render(<PropertyCard property={mockProperty} />)
+
+    // Should show image navigation dots
+    expect(screen.getByLabelText('View image 1 of 2')).toBeInTheDocument()
+    expect(screen.getByLabelText('View image 2 of 2')).toBeInTheDocument()
+  })
+
+  it('handles wishlist action', () => {
+    render(<PropertyCard property={mockProperty} />)
+
+    const wishlistButton = screen.getByRole('button', { name: /add to wishlist/i })
+    fireEvent.click(wishlistButton)
+
+    // The wishlist state is managed internally by the component
+    expect(wishlistButton).toBeInTheDocument()
+  })
+
+  it('handles share action', () => {
+    const onShare = jest.fn()
+    render(<PropertyCard property={mockProperty} onShare={onShare} />)
+
+    const shareButton = screen.getByRole('button', { name: /share property/i })
+    fireEvent.click(shareButton)
+
+    expect(onShare).toHaveBeenCalledWith(mockProperty)
+  })
+
+  it('applies proper accessibility attributes', () => {
+    render(<PropertyCard property={mockProperty} onSelect={jest.fn()} />)
+
+    const selectButton = screen.getByRole('button', { name: /select property/i })
+    expect(selectButton).toBeInTheDocument()
+
+    const bookmarkButton = screen.getByRole('button', { name: /add bookmark/i })
+    expect(bookmarkButton).toBeInTheDocument()
+  })
+
+  it('renders with custom className', () => {
+    const customClass = 'custom-property-card'
+    const { container } = render(
+      <PropertyCard property={mockProperty} className={customClass} />
+    )
+
+    expect(container.firstChild).toHaveClass(customClass)
+  })
+})
 
 
