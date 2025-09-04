@@ -68,3 +68,4 @@ echo "⚙️  For configuration templates, see: docs/guides/github-mcp-config.md
 
 
 
+
