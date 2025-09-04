@@ -4,13 +4,13 @@ import { Plane, Hotel, Car, Utensils, Camera, Shield } from "lucide-react"
 
 interface PaymentSummaryProps {
   tourPackage: "basic" | "premium" | "luxury"
-  propertyTitle: string
-  tourDate: string
+  selectedProperty: string
+  tourDate: Date | undefined
   tourTime: string
   guests: number
 }
 
-export function PaymentSummary({ tourPackage, propertyTitle, tourDate, tourTime, guests }: PaymentSummaryProps) {
+export function PaymentSummary({ tourPackage, selectedProperty, tourDate, tourTime, guests }: PaymentSummaryProps) {
   const packages = {
     basic: {
       name: "Essential Tour",
@@ -63,6 +63,16 @@ export function PaymentSummary({ tourPackage, propertyTitle, tourDate, tourTime,
     return <Shield className="h-4 w-4 text-gold" />
   }
 
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "TBD"
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
+
   return (
     <div className="space-y-6">
       {/* Booking Summary */}
@@ -71,11 +81,11 @@ export function PaymentSummary({ tourPackage, propertyTitle, tourDate, tourTime,
         <div className="space-y-3">
           <div className="flex justify-between">
             <span className="text-luxury text-muted-foreground">Property</span>
-            <span className="text-luxury text-foreground font-medium">{propertyTitle}</span>
+            <span className="text-luxury text-foreground font-medium">{selectedProperty}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-luxury text-muted-foreground">Date</span>
-            <span className="text-luxury text-foreground font-medium">{tourDate}</span>
+            <span className="text-luxury text-foreground font-medium">{formatDate(tourDate)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-luxury text-muted-foreground">Time</span>

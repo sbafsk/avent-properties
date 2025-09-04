@@ -200,7 +200,7 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
                     value={formData.email}
                     onChange={(e) => updateFormData("email", e.target.value)}
                     className="glass border-white/20"
-                    placeholder="your.email@example.com"
+                    placeholder="Enter your email"
                   />
                 </div>
                 <div className="space-y-2">
@@ -209,86 +209,51 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
                     value={formData.phone}
                     onChange={(e) => updateFormData("phone", e.target.value)}
                     className="glass border-white/20"
-                    placeholder="+971 XX XXX XXXX"
+                    placeholder="Enter your phone number"
                   />
                 </div>
-              </div>
-
-              <div className="mt-6 space-y-4">
                 <div className="space-y-2">
                   <Label className="text-foreground">Number of Guests</Label>
                   <Select
                     value={formData.guests.toString()}
-                    onValueChange={(value) => updateFormData("guests", Number.parseInt(value))}
+                    onValueChange={(value) => updateFormData("guests", parseInt(value))}
                   >
-                    <SelectTrigger className="glass border-white/20 w-32">
+                    <SelectTrigger className="glass border-white/20">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="glass border-white/20">
-                      {[1, 2, 3, 4, 5, 6].map((num) => (
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                         <SelectItem key={num} value={num.toString()}>
-                          {num} {num === 1 ? "person" : "people"}
+                          {num} {num === 1 ? "Guest" : "Guests"}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
-            </GlassCard>
-
-            <GlassCard className="p-6">
-              <h3 className="heading-luxury text-xl text-foreground mb-4">Tour Package</h3>
-              <div className="space-y-4">
-                {[
-                  {
-                    id: "basic",
-                    name: "Essential Tour",
-                    price: "Complimentary",
-                    description: "Property tour with expert consultation",
-                  },
-                  {
-                    id: "premium",
-                    name: "Premium Experience",
-                    price: "$2,500",
-                    description: "Includes flights, accommodation, and dining",
-                  },
-                  {
-                    id: "luxury",
-                    name: "Platinum Package",
-                    price: "$5,000",
-                    description: "First-class experience with exclusive services",
-                  },
-                ].map((pkg) => (
-                  <div
-                    key={pkg.id}
-                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                      formData.tourPackage === pkg.id
-                        ? "border-gold bg-gold/10"
-                        : "border-white/20 hover:border-white/40"
-                    }`}
-                    onClick={() => updateFormData("tourPackage", pkg.id)}
+                <div className="space-y-2">
+                  <Label className="text-foreground">Tour Package</Label>
+                  <Select
+                    value={formData.tourPackage}
+                    onValueChange={(value: "basic" | "premium" | "luxury") => updateFormData("tourPackage", value)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="heading-luxury text-lg text-foreground">{pkg.name}</h4>
-                        <p className="text-luxury text-sm text-muted-foreground">{pkg.description}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-luxury text-lg font-bold text-gold">{pkg.price}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    <SelectTrigger className="glass border-white/20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="glass border-white/20">
+                      <SelectItem value="basic">Basic Tour</SelectItem>
+                      <SelectItem value="premium">Premium Experience</SelectItem>
+                      <SelectItem value="luxury">Luxury VIP Service</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-
-              <div className="mt-6 space-y-2">
-                <Label className="text-foreground">Special Requests (Optional)</Label>
+              <div className="space-y-2 mt-6">
+                <Label className="text-foreground">Special Requests</Label>
                 <Textarea
                   value={formData.specialRequests}
                   onChange={(e) => updateFormData("specialRequests", e.target.value)}
-                  className="glass border-white/20"
-                  placeholder="Any special requirements or preferences..."
-                  rows={3}
+                  className="glass border-white/20 min-h-[100px]"
+                  placeholder="Any special requests or requirements for your tour..."
                 />
               </div>
             </GlassCard>
@@ -297,12 +262,19 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
 
       case 4:
         return (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
+          <div className="space-y-6">
+            <GlassCard className="p-6">
+              <h2 className="heading-luxury text-2xl text-foreground mb-6">Payment & Confirmation</h2>
+              <p className="text-luxury text-muted-foreground mb-6">
+                {formData.tourPackage === "basic"
+                  ? "Basic tours are free of charge. No payment required."
+                  : `Complete your ${formData.tourPackage} tour booking with secure payment.`
+                }
+              </p>
+
               {formData.tourPackage !== "basic" && (
-                <GlassCard className="p-6">
-                  <h2 className="heading-luxury text-2xl text-foreground mb-6">Payment Details</h2>
-                  <div className="space-y-4">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-foreground">Card Number</Label>
                       <Input
@@ -312,73 +284,59 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
                         placeholder="1234 5678 9012 3456"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="text-foreground">Expiry Date</Label>
-                        <Input
-                          value={formData.expiryDate}
-                          onChange={(e) => updateFormData("expiryDate", e.target.value)}
-                          className="glass border-white/20"
-                          placeholder="MM/YY"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-foreground">CVV</Label>
-                        <Input
-                          value={formData.cvv}
-                          onChange={(e) => updateFormData("cvv", e.target.value)}
-                          className="glass border-white/20"
-                          placeholder="123"
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label className="text-foreground">Expiry Date</Label>
+                      <Input
+                        value={formData.expiryDate}
+                        onChange={(e) => updateFormData("expiryDate", e.target.value)}
+                        className="glass border-white/20"
+                        placeholder="MM/YY"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-foreground">CVV</Label>
+                      <Input
+                        value={formData.cvv}
+                        onChange={(e) => updateFormData("cvv", e.target.value)}
+                        className="glass border-white/20"
+                        placeholder="123"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label className="text-foreground">Billing Address</Label>
-                      <Textarea
+                      <Input
                         value={formData.billingAddress}
                         onChange={(e) => updateFormData("billingAddress", e.target.value)}
                         className="glass border-white/20"
                         placeholder="Enter your billing address"
-                        rows={3}
                       />
                     </div>
                   </div>
-                </GlassCard>
+                </div>
               )}
 
-              {formData.tourPackage === "basic" && (
-                <GlassCard className="p-6">
-                  <h2 className="heading-luxury text-2xl text-foreground mb-4">Complimentary Tour</h2>
-                  <p className="text-luxury text-muted-foreground">
-                    Your essential tour is complimentary. No payment required at this time.
-                  </p>
-                </GlassCard>
-              )}
-            </div>
-
-            <div>
               <PaymentSummary
                 tourPackage={formData.tourPackage}
-                propertyTitle={formData.selectedProperty}
-                tourDate={formatDate(formData.tourDate)}
+                selectedProperty={formData.selectedProperty}
+                tourDate={formData.tourDate}
                 tourTime={formData.tourTime}
                 guests={formData.guests}
               />
-            </div>
+            </GlassCard>
           </div>
         )
 
       case 5:
         return (
-          <div className="text-center space-y-8">
+          <div className="text-center">
             <GlassCard className="p-8">
-              <div className="w-20 h-20 bg-gold rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="h-10 w-10 text-gold-foreground" />
+              <div className="mb-6">
+                <CheckCircle className="h-16 w-16 text-gold mx-auto mb-4" />
+                <h2 className="heading-luxury text-3xl text-foreground mb-2">Reservation Confirmed!</h2>
+                <p className="text-luxury text-muted-foreground">
+                  Thank you for choosing Avent Properties. Your tour has been scheduled successfully.
+                </p>
               </div>
-              <h2 className="heading-luxury text-3xl text-foreground mb-4">Reservation Confirmed!</h2>
-              <p className="text-luxury text-lg text-muted-foreground mb-6">
-                Thank you for booking your luxury property tour with Avent Properties.
-              </p>
 
               <div className="space-y-4 text-left max-w-md mx-auto">
                 <div className="flex justify-between">
@@ -400,7 +358,7 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
               </div>
 
               <div className="mt-8 p-4 glass rounded-lg">
-                <p className="text-luxury text-sm text-muted-foreground">
+                <p className="text-luxury text-muted-foreground">
                   A confirmation email has been sent to <strong>{formData.email}</strong>. Our Dubai office will contact
                   you within 24 hours to finalize arrangements.
                 </p>
@@ -427,20 +385,18 @@ export function ReservationForm({ propertyTitle }: ReservationFormProps) {
             return (
               <div key={step.number} className="flex items-center">
                 <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
-                    isCompleted
-                      ? "bg-gold border-gold text-gold-foreground"
-                      : isActive
-                        ? "border-gold text-gold"
-                        : "border-white/20 text-muted-foreground"
-                  }`}
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${isCompleted
+                    ? "bg-gold border-gold text-gold-foreground"
+                    : isActive
+                      ? "border-gold text-gold"
+                      : "border-white/20 text-muted-foreground"
+                    }`}
                 >
                   {isCompleted ? <CheckCircle className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
                 </div>
                 <span
-                  className={`ml-2 text-sm font-medium ${
-                    isActive ? "text-gold" : isCompleted ? "text-foreground" : "text-muted-foreground"
-                  }`}
+                  className={`ml-2 text-sm font-medium ${isActive ? "text-gold" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                    }`}
                 >
                   {step.title}
                 </span>

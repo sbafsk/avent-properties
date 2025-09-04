@@ -4,6 +4,7 @@ import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
 import { PerformanceMonitor } from "@/components/ui/performance-monitor"
 import { FavoritesProvider } from "@/hooks/favorites-context"
+import { Toaster } from "sonner"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -36,6 +37,12 @@ export default function RootLayout({
           {children}
         </FavoritesProvider>
         <PerformanceMonitor />
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          duration={4000}
+        />
       </body>
     </html>
   )

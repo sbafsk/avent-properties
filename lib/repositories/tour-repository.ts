@@ -6,7 +6,21 @@ import { BaseRepository, SearchCriteria } from './base-repository'
 import { TourWizardValidationError } from '@/lib/errors'
 import { createFullValidator } from '@/lib/validation/tour-wizard-validator'
 
-export interface TourSubmission extends TourWizardData {
+// Extended interface for reservation form data
+export interface ExtendedTourData extends TourWizardData {
+  // Additional fields from reservation form
+  guests?: number
+  propertyId?: string
+  tourPackage?: "basic" | "premium" | "luxury"
+  paymentDetails?: {
+    cardNumber: string
+    expiryDate: string
+    cvv: string
+    billingAddress: string
+  }
+}
+
+export interface TourSubmission extends ExtendedTourData {
   id: string
   status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
   submittedAt: Date
@@ -108,19 +122,14 @@ export class TourRepository extends BaseRepository<TourSubmission, string> {
   async findById(id: string): Promise<TourSubmission | null> {
     try {
       this.validateId(id)
-
-      // In a real implementation, this would query the database
-      // For now, we'll simulate the database query
       return await this.simulateDatabaseFindById(id)
     } catch (error) {
       this.handleError(error, 'findById', { id })
     }
   }
 
-  async findMany(criteria: TourSearchCriteria): Promise<TourSubmission[]> {
+  async findMany(criteria: TourSearchCriteria = {}): Promise<TourSubmission[]> {
     try {
-      // In a real implementation, this would build and execute a database query
-      // For now, we'll simulate the database query
       return await this.simulateDatabaseFindMany(criteria)
     } catch (error) {
       this.handleError(error, 'findMany', { criteria })
@@ -187,6 +196,12 @@ export class TourRepository extends BaseRepository<TourSubmission, string> {
 
     // In a real implementation, this would save to Supabase/PostgreSQL
     console.log('Simulating database save:', submission.id)
+
+    // Store in memory for testing (in real app, this would be database)
+    if (!this.inMemoryStorage) {
+      this.inMemoryStorage = new Map()
+    }
+    this.inMemoryStorage.set(submission.id, submission)
   }
 
   private async simulateDatabaseUpdate(id: string): Promise<void> {
@@ -197,14 +212,44 @@ export class TourRepository extends BaseRepository<TourSubmission, string> {
   private async simulateDatabaseFindById(id: string): Promise<TourSubmission | null> {
     await new Promise(resolve => setTimeout(resolve, 30))
 
+    // Check in-memory storage first
+    if (this.inMemoryStorage && this.inMemoryStorage.has(id)) {
+      return this.inMemoryStorage.get(id) || null
+    }
+
     // Simulate finding a submission (in real app, this would query the database)
-    // For now, return null to simulate "not found"
     console.log('Simulating database findById:', id)
     return null
   }
 
   private async simulateDatabaseFindMany(criteria: TourSearchCriteria): Promise<TourSubmission[]> {
     await new Promise(resolve => setTimeout(resolve, 50))
+
+    // Check in-memory storage for testing
+    if (this.inMemoryStorage) {
+      const submissions = Array.from(this.inMemoryStorage.values())
+
+      // Apply basic filtering
+      let filtered = submissions
+
+      if (criteria.status) {
+        filtered = filtered.filter(s => s.status === criteria.status)
+      }
+
+      if (criteria.location && criteria.location.length > 0) {
+        filtered = filtered.filter(s =>
+          s.location.some(loc => criteria.location!.includes(loc))
+        )
+      }
+
+      if (criteria.propertyType && criteria.propertyType.length > 0) {
+        filtered = filtered.filter(s =>
+          s.propertyType.some(type => criteria.propertyType!.includes(type))
+        )
+      }
+
+      return filtered
+    }
 
     // Simulate finding multiple submissions
     // In a real implementation, this would execute a database query
@@ -216,7 +261,15 @@ export class TourRepository extends BaseRepository<TourSubmission, string> {
   private async simulateDatabaseDelete(id: string): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 30))
     console.log('Simulating database delete:', id)
+
+    // Remove from in-memory storage
+    if (this.inMemoryStorage) {
+      this.inMemoryStorage.delete(id)
+    }
   }
+
+  // In-memory storage for testing purposes
+  private inMemoryStorage?: Map<string, TourSubmission>
 }
 
 // Export a singleton instance for use throughout the application
